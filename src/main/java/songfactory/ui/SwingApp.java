@@ -30,7 +30,6 @@ public class SwingApp {
 
         JMenu file = new JMenu("File");
         JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> System.exit(0));
         file.add(exit);
 
         JMenu edit = new JMenu("Edit");
@@ -58,10 +57,8 @@ public class SwingApp {
 
 
         JButton select = new JButton("Select");
-        select.addActionListener(e -> setStatusText("Select"));
 
         JButton pen = new JButton("Pen");
-        pen.addActionListener(e -> setStatusText("Pen"));
 
         JPanel sp = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         sp.add(select);
@@ -84,12 +81,8 @@ public class SwingApp {
         JSeparator two = new JSeparator();
         ctrlButtons.add(two);
 
-
         JButton play = new JButton("Play");
-        play.addActionListener(e -> setStatusText("Play"));
-
         JButton stop = new JButton("Stop");
-        stop.addActionListener(e -> setStatusText("Stop"));
 
         JPanel ps = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         ps.add(play);
@@ -104,123 +97,13 @@ public class SwingApp {
         addSettings.setLayout(new BoxLayout(addSettings, BoxLayout.Y_AXIS));
 
         JRadioButton note = new JRadioButton("Note");
-        JRadioButton rest = new JRadioButton("Rest");
-        JRadioButton flat = new JRadioButton("Flat");
-        JRadioButton sharp = new JRadioButton("Sharp");
-
-        // Event listeners
-
-        create.addActionListener(e -> {
-            // Add to staffNum and enable delete buttons
-            setStatusText("New Staff");
-            setPlaceholderText(++staffNum + " Staves");
-            delete.setEnabled(true);
-            deleteStaff.setEnabled(true);
-        });
-        delete.addActionListener(e -> {
-            // Decrement staffNum and disable delete buttons if not enough staves
-            setStatusText("Delete Staff");
-            if (staffNum > 1) {
-                setPlaceholderText(--staffNum + " Staves");
-                if (staffNum == 1) {
-                    delete.setEnabled(false);
-                    deleteStaff.setEnabled(false);
-
-                } // if
-
-            } // if
-        });
-
-        newStaff.addActionListener(e -> {
-            // Add to staffNum and enable delete buttons
-            setStatusText("New Staff");
-            setPlaceholderText(++staffNum + " Staves");
-            delete.setEnabled(true);
-            deleteStaff.setEnabled(true);
-
-        });
-        deleteStaff.addActionListener(e -> {
-            // Decrement staffNum and disable delete buttons if not enough staves
-            setStatusText("Delete Staff");
-            if (staffNum > 1) {
-                setPlaceholderText(--staffNum + " Staves");
-                if (staffNum == 1) {
-                    delete.setEnabled(false);
-                    deleteStaff.setEnabled(false);
-
-                } // if
-
-            } // if
-
-        });
-
         note.setSelected(true);
-        note.addActionListener(e -> {
-            if (note.isSelected()) {
-                // Select Note and deselect other options
-                setStatusText("Note");
-                rest.setSelected(false);
-                flat.setSelected(false);
-                sharp.setSelected(false);
-
-            } else {
-                // Disallow Note from being deselected
-                note.setSelected(true);
-
-            } // if
-
-        });
         addSettings.add(note);
-
-        rest.addActionListener(e -> {
-            if (rest.isSelected()) {
-                // Select Rest and deselect other options
-                setStatusText("Rest");
-                note.setSelected(false);
-                flat.setSelected(false);
-                sharp.setSelected(false);
-
-            } else {
-                // Disallow Rest from being deselected
-                rest.setSelected(true);
-
-            } // if
-
-        });
+        JRadioButton rest = new JRadioButton("Rest");
         addSettings.add(rest);
-
-        flat.addActionListener(e -> {
-            if (flat.isSelected()) {
-                // Select Rest and deselect other options
-                setStatusText("Flat");
-                note.setSelected(false);
-                rest.setSelected(false);
-                sharp.setSelected(false);
-
-            } else {
-                // Disallow Flat from being deselected
-                flat.setSelected(true);
-
-            } // if
-
-        });
+        JRadioButton flat = new JRadioButton("Flat");
         addSettings.add(flat);
-
-        sharp.addActionListener(e -> {
-            // Select Sharp and deselect other options
-            if (sharp.isSelected()) {
-                setStatusText("Sharp");
-                note.setSelected(false);
-                rest.setSelected(false);
-                flat.setSelected(false);
-
-            } else {
-                // Disallow Sharp from being deselected
-                sharp.setSelected(true);
-
-            } // if
-
-        });
+        JRadioButton sharp = new JRadioButton("Sharp");
         addSettings.add(sharp);
 
 
@@ -244,15 +127,20 @@ public class SwingApp {
         ctrlButtons.add(sets);
 
 
+        // Music Components
+
+        MusicView sheetMusic = new MusicView();
+        System.out.println(sheetMusic);
+
         // Display window elements
         JPanel display = new JPanel(new BorderLayout());
         JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
         inScrollPane.setBackground(Color.WHITE);
         placeholder = new JLabel("Welcome to SongFactory!");
-//        inScrollPane.add(placeholder);
-        MusicView sheetMusic = new MusicView();
-        System.out.println(sheetMusic);
+        inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
+
+
         JScrollPane displayArea = new JScrollPane(
                 inScrollPane,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -267,6 +155,126 @@ public class SwingApp {
         status = new JLabel("SongFactory");
         status.setForeground(Color.WHITE);
         license.add(status);
+
+
+        // Event listeners
+
+        exit.addActionListener(e -> System.exit(0));
+        select.addActionListener(e -> setStatusText("Select"));
+        pen.addActionListener(e -> setStatusText("Pen"));
+        play.addActionListener(e -> setStatusText("Play"));
+        stop.addActionListener(e -> setStatusText("Stop"));
+
+        create.addActionListener(e -> {
+            // Add to staffNum and enable delete buttons
+            setStatusText("New Staff");
+            setPlaceholderText(++staffNum + " Staves");
+            delete.setEnabled(true);
+            deleteStaff.setEnabled(true);
+            sheetMusic.updateComponent();
+        });
+
+        delete.addActionListener(e -> {
+            // Decrement staffNum and disable delete buttons if not enough staves
+            setStatusText("Delete Staff");
+            if (staffNum > 1) {
+                setPlaceholderText(--staffNum + " Staves");
+                if (staffNum == 1) {
+                    delete.setEnabled(false);
+                    deleteStaff.setEnabled(false);
+
+                } // if
+
+            } // if
+        });
+
+        newStaff.addActionListener(e -> {
+            // Add to staffNum and enable delete buttons
+            setStatusText("New Staff");
+            setPlaceholderText(++staffNum + " Staves");
+            delete.setEnabled(true);
+            deleteStaff.setEnabled(true);
+
+        });
+
+        deleteStaff.addActionListener(e -> {
+            // Decrement staffNum and disable delete buttons if not enough staves
+            setStatusText("Delete Staff");
+            if (staffNum > 1) {
+                setPlaceholderText(--staffNum + " Staves");
+                if (staffNum == 1) {
+                    delete.setEnabled(false);
+                    deleteStaff.setEnabled(false);
+
+                } // if
+
+            } // if
+
+        });
+
+        note.addActionListener(e -> {
+            if (note.isSelected()) {
+                // Select Note and deselect other options
+                setStatusText("Note");
+                rest.setSelected(false);
+                flat.setSelected(false);
+                sharp.setSelected(false);
+
+            } else {
+                // Disallow Note from being deselected
+                note.setSelected(true);
+
+            } // if
+
+        });
+
+        rest.addActionListener(e -> {
+            if (rest.isSelected()) {
+                // Select Rest and deselect other options
+                setStatusText("Rest");
+                note.setSelected(false);
+                flat.setSelected(false);
+                sharp.setSelected(false);
+
+            } else {
+                // Disallow Rest from being deselected
+                rest.setSelected(true);
+
+            } // if
+
+        });
+
+        flat.addActionListener(e -> {
+            if (flat.isSelected()) {
+                // Select Rest and deselect other options
+                setStatusText("Flat");
+                note.setSelected(false);
+                rest.setSelected(false);
+                sharp.setSelected(false);
+
+            } else {
+                // Disallow Flat from being deselected
+                flat.setSelected(true);
+
+            } // if
+
+        });
+
+        sharp.addActionListener(e -> {
+            // Select Sharp and deselect other options
+            if (sharp.isSelected()) {
+                setStatusText("Sharp");
+                note.setSelected(false);
+                rest.setSelected(false);
+                flat.setSelected(false);
+
+            } else {
+                // Disallow Sharp from being deselected
+                sharp.setSelected(true);
+
+            } // if
+
+        });
 
 
         // Build scene

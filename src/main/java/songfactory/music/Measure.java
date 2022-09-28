@@ -21,7 +21,7 @@ public class Measure {
         this.key = 0;
 
         this.nodes = new MusicSequence();
-        this.nodes.add(new MusicNode(Note.REST, this.time.getMeasureLength()));
+        this.nodes.add(new MusicNode(Note.REST, 1.0));
 
     } // Constructor
 
@@ -97,10 +97,20 @@ public class Measure {
 
         } // if
 
-        this.nodes = newNodes;
+        nodes = newNodes;
         return seq;
 
     } // processSequence
+
+    public int size() {
+        return nodes.size();
+
+    } // size
+
+    public double length() {
+        return time.getMeasureLength();
+
+    } // length
 
     public String toString() {
         return nodes.toString();

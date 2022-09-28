@@ -5,5 +5,5 @@ public enum Clef {
     ALTO,
     BASS,
     CONTRABASS
-    
+
 } // Clef
