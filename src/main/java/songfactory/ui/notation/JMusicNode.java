@@ -3,7 +3,7 @@ package songfactory.ui.notation;
 import java.awt.*;
 import javax.swing.*;
 
-public class JMusicNode extends JComponent {
+public abstract class JMusicNode extends JComponent {
 
     protected static Image trebleClefImage = (new ImageIcon("res/trebleClef.png")).getImage();
 

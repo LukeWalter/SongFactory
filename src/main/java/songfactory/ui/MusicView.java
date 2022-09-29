@@ -73,7 +73,7 @@ public class MusicView extends JComponent {
         g2d.setStroke(new BasicStroke(10f));
         g2d.drawLine(x + width - 5, y + 5, x + width - 5, y + height - 5);
 
-        TrebleClef t = new TrebleClef();
+        JMusicNode t = new TrebleClef();
         t.paintNode(g, 5, y + height);
 
     } // paintComponent
