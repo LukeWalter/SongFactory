@@ -42,7 +42,7 @@ public abstract class JMusicNode extends JComponent {
     } // JMusicNode
 
     public void paintNode(Graphics g, int x, int y) {
-        super.paintComponent(g);
+//        super.paintComponent(g);
         g.drawImage(image, x - xOffset, y - yOffset, null);
 
     } // paintComponent

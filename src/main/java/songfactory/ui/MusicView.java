@@ -10,7 +10,13 @@ import java.util.List;
 
 public class MusicView extends JComponent {
 
+    private class StaffInfo {
+        int x, y, width, height;
+
+    } // StaffInfo
+
     private Dimension dimensions;
+    private StaffInfo staff;
     private List<Measure> measures;
 
     private List<JMusicNode> musicNodes;
@@ -20,19 +26,28 @@ public class MusicView extends JComponent {
         super();
 
         this.dimensions = new Dimension(250, 100);
-        this.setMinimumSize(dimensions);
         this.setPreferredSize(dimensions);
+
+        this.staff = new StaffInfo();
+        updateStaff();
 
         this.measures = new LinkedList<>();
         this.musicNodes = new LinkedList<>();
 
     } // Constructor
 
+    private void updateStaff() {
+        staff.x = 0;
+        staff.y = (int)(dimensions.getHeight() / 4.0);
+        staff.width = (int)(dimensions.getWidth());
+        staff.height = (int)(dimensions.getHeight() / 2.0);
+
+    } // updateStaff
+
     public void updateComponent() {
 
-        System.out.println(dimensions.getSize());
-        dimensions.setSize(dimensions.getWidth() + 10, 75);
-        System.out.println(dimensions.getSize());
+        dimensions.setSize(dimensions.getWidth() + 10, dimensions.getHeight());
+        updateStaff();
 
         invalidate();
         repaint();
@@ -45,12 +60,12 @@ public class MusicView extends JComponent {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        int width = (int)(dimensions.getWidth());
-        int height = (int)(dimensions.getHeight() / 2.0);
+        int width = staff.width;
+        int height = staff.height;
         Dimension d = new Dimension(width, height);
 
-        int x = 0;
-        int y = (int)(dimensions.getHeight() / 4.0);
+        int x = staff.x;
+        int y = staff.y;
         Point p = new Point(x, y);
 
         Rectangle staff = new Rectangle(p, d);
@@ -74,13 +89,17 @@ public class MusicView extends JComponent {
         g2d.drawLine(x + width - 5, y + 5, x + width - 5, y + height - 5);
 
         JMusicNode t = new TrebleClef();
-        t.paintNode(g, 5, y + height);
+        t.paintNode(g, x + 5, y + height);
+
+        JMusicNode c = new CommonTime();
+        c.paintNode(g, x + 60, y + height / 2);
+
+        JMusicNode q = new QuarterNote();
+        q.paintNode(g, x + 140, y + height / 2);
+
+        JMusicNode e = new EighthNote();
+        e.paintNode(g, x + 140, y + height * 3 / 4);
 
     } // paintComponent
-
-    public String toString() {
-        return "toString called on MusicView";
-
-    } // toString
 
 } // MusicView
