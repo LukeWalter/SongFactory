@@ -3,7 +3,7 @@ package songfactory.ui.notation;
 public class TrebleClef extends JMusicNode {
 
     public TrebleClef() {
-        super(trebleClefImage, 0, 70);
+        super(TREBLE_CLEF, 0, 70);
 
     } // Constructor
 
