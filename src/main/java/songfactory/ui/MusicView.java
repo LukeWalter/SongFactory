@@ -94,11 +94,11 @@ public class MusicView extends JComponent {
         JMusicNode c = new CommonTime();
         c.paintNode(g, x + 60, y + height / 2);
 
-        JMusicNode q = new QuarterNote();
-        q.paintNode(g, x + 140, y + height / 2);
-
         JMusicNode e = new EighthNote();
-        e.paintNode(g, x + 140, y + height * 3 / 4);
+        e.paintNode(g, x + 140, y + height / 2);
+
+        JMusicNode r = new Natural();
+        r.paintNode(g, x + 140, y + height / 2);
 
     } // paintComponent
 
