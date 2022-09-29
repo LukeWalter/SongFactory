@@ -41,9 +41,19 @@ public abstract class JMusicNode extends JComponent {
 
     } // JMusicNode
 
-    public void paintNode(Graphics g, int x, int y) {
+    public int getXOffset() {
+        return xOffset;
+
+    } // getXOffset
+
+    public int getYOffset() {
+        return yOffset;
+
+    } // getYOffset
+
+    public void paintNode(Graphics g) {
 //        super.paintComponent(g);
-        g.drawImage(image, x - xOffset, y - yOffset, null);
+        g.drawImage(image, this.getX() - xOffset, this.getY() - yOffset, null);
 
     } // paintComponent
 
