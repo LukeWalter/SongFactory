@@ -1,5 +1,8 @@
 package songfactory.ui;
 
+import songfactory.ui.notation.JMusicNode;
+import songfactory.ui.notation.TrebleClef;
+
 import java.awt.*;
 import java.util.Hashtable;
 import javax.swing.*;
@@ -130,7 +133,7 @@ public class SwingApp {
         // Music Components
 
         MusicView sheetMusic = new MusicView();
-        System.out.println(sheetMusic);
+//        JMusicNode t = new TrebleClef();
 
         // Display window elements
         JPanel display = new JPanel(new BorderLayout());
@@ -139,6 +142,7 @@ public class SwingApp {
         placeholder = new JLabel("Welcome to SongFactory!");
         inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
+//        inScrollPane.add(t);
 
 
         JScrollPane displayArea = new JScrollPane(

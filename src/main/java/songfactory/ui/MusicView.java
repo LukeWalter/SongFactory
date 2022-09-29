@@ -1,6 +1,7 @@
 package songfactory.ui;
 
 import songfactory.music.Measure;
+import songfactory.ui.notation.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,16 +13,18 @@ public class MusicView extends JComponent {
     private Dimension dimensions;
     private List<Measure> measures;
 
+    private List<JMusicNode> musicNodes;
 
     public MusicView() {
 
         super();
 
-        this.dimensions = new Dimension(250, 75);
+        this.dimensions = new Dimension(250, 100);
         this.setMinimumSize(dimensions);
         this.setPreferredSize(dimensions);
 
         this.measures = new LinkedList<>();
+        this.musicNodes = new LinkedList<>();
 
     } // Constructor
 
@@ -42,26 +45,36 @@ public class MusicView extends JComponent {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        Rectangle staff = new Rectangle(dimensions);
+        int width = (int)(dimensions.getWidth());
+        int height = (int)(dimensions.getHeight() / 2.0);
+        Dimension d = new Dimension(width, height);
+
+        int x = 0;
+        int y = (int)(dimensions.getHeight() / 4.0);
+        Point p = new Point(x, y);
+
+        Rectangle staff = new Rectangle(p, d);
         g2d.setColor(Color.WHITE);
         g2d.draw(staff);
         g2d.fill(staff);
 
-        Dimension d = staff.getSize();
         g2d.setStroke(new BasicStroke(2f));
         g2d.setColor(Color.BLACK);
 
-        g2d.drawLine(1, 1, 1, (int)(d.getHeight() - 1));
+        g2d.drawLine(x + 1, y + 1, x + 1, y + height - 1);
 
-        g2d.drawLine(1, 1, (int)(d.getWidth()), 1);
-        g2d.drawLine(1, (int)(d.getHeight() / 4.0), (int)(d.getWidth()), (int)(d.getHeight() / 4.0));
-        g2d.drawLine(1, (int)(d.getHeight() / 2.0), (int)(d.getWidth()), (int)(d.getHeight() / 2.0));
-        g2d.drawLine(1, (int)(d.getHeight() * 3.0 / 4.0), (int)(d.getWidth()), (int)(d.getHeight() * 3.0 / 4.0));
-        g2d.drawLine(1, (int)(d.getHeight() - 1.0), (int)(d.getWidth()), (int)(d.getHeight() - 1.0));
+        g2d.drawLine(x + 1, y + 1, width, y + 1);
+        g2d.drawLine(x + 1, y + height / 4, x + width, y + height / 4);
+        g2d.drawLine(x + 1, y + height / 2, x + width, y + height / 2);
+        g2d.drawLine(x + 1, y + height * 3 / 4, x + width, y + height * 3 / 4);
+        g2d.drawLine(x + 1, y + height - 1, x + width, y + height - 1);
 
-        g2d.drawLine((int)(d.getWidth() - 17), 1, (int)(d.getWidth() - 17), (int)(d.getHeight() - 1));
+        g2d.drawLine(x + width - 17, y + 1, x + width - 17, y + height - 1);
         g2d.setStroke(new BasicStroke(10f));
-        g2d.drawLine((int)(d.getWidth() - 4), 5, (int)(d.getWidth() - 4), (int)(d.getHeight() - 1));
+        g2d.drawLine(x + width - 5, y + 5, x + width - 5, y + height - 5);
+
+        TrebleClef t = new TrebleClef();
+        t.paintNode(g, 5, y + height);
 
     } // paintComponent
 
