@@ -1,6 +1,6 @@
 package songfactory.ui.notation;
 
-public class EighthNote extends JMusicNode {
+public class EighthNote extends JNote {
 
     public EighthNote() {
         super(EIGHTH_NOTE, 15, 35);

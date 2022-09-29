@@ -140,8 +140,7 @@ public class MusicView extends JComponent {
         };
 
         for (Integer posY : validPositions) {
-            System.out.println("CurrY: " + currY);
-            System.out.println("PosY: " + posY);
+            
             int currDiff = Math.abs(currY - posY);
 
             if (currDiff < diff) {

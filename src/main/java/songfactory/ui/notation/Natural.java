@@ -1,6 +1,6 @@
 package songfactory.ui.notation;
 
-public class Natural extends JMusicNode {
+public class Natural extends JAccidental {
 
     public Natural() {
         super(NATURAL, 17, 13);
