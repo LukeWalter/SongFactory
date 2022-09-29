@@ -1,9 +1,6 @@
 package songfactory.ui;
 
-import songfactory.music.Accidental;
-import songfactory.music.Measure;
-import songfactory.music.MusicNode;
-import songfactory.music.Note;
+import songfactory.music.*;
 import songfactory.ui.notation.*;
 
 import javax.swing.*;
@@ -29,16 +26,24 @@ public class MusicView extends JComponent {
 
         super();
 
-        this.dimensions = new Dimension(250, 100);
+        this.measures = new LinkedList<>();
+        measures.add(new Measure());
+        measures.add(new Measure());
+        measures.add(new Measure());
+        measures.add(new Measure());
+        System.out.println(MusicSequence.getAsSequence(measures));
+
+        this.dimensions = new Dimension(
+                150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
+                100
+        );
         this.setPreferredSize(dimensions);
 
         this.staff = new StaffInfo();
         updateStaff();
 
-        this.measures = new LinkedList<>();
-        measures.add(new Measure());
-
     } // Constructor
+
 
     private void updateStaff() {
 
@@ -62,7 +67,12 @@ public class MusicView extends JComponent {
 
     public void updateComponent() {
 
-        dimensions.setSize(dimensions.getWidth() + 10, dimensions.getHeight());
+        this.dimensions = new Dimension(
+                150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
+                100
+        );
+        this.setPreferredSize(dimensions);
+
         updateStaff();
 
         revalidate();
@@ -102,7 +112,8 @@ public class MusicView extends JComponent {
 
         g2d.drawLine(x + width - 17, staff.line5, x + width - 17, staff.line1);
         g2d.setStroke(new BasicStroke(10f));
-        g2d.drawLine(x + width - 5, y + 5, x + width - 5, y + height - 5);
+        g2d.drawLine(x + width - 4, y + 5, x + width - 4, y + height - 5);
+        g2d.setStroke(new BasicStroke(2f));
 
         JMusicNode t = new TrebleClef();
         t.setLocation(x + 5, y + height);
@@ -113,7 +124,7 @@ public class MusicView extends JComponent {
         c.paintNode(g);
 
         int nodeOffset = x + 150;
-        int nodeSpacing = 30;
+        int nodeSpacing = 50;
         int numNodes = 0;
 
         for (Measure measure : measures) {
@@ -127,6 +138,9 @@ public class MusicView extends JComponent {
                 numNodes++;
 
             } // for
+
+            g2d.drawLine(nodeOffset + nodeSpacing * numNodes, staff.line5, nodeOffset + nodeSpacing * numNodes, staff.line1);
+            numNodes++;
 
         } // for
 
