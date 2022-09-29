@@ -98,6 +98,7 @@ public class MusicNode {
 
     public void setAccidental(Accidental accidental) {
         this.accidental = accidental;
+        updateImage();
 
     } // setAccidental
 
@@ -154,6 +155,7 @@ public class MusicNode {
 
     public void setLength(double length) {
         this.length = length;
+        updateImage();
 
     } // setLength
 
@@ -162,7 +164,7 @@ public class MusicNode {
 
     } // getImage
 
-    public void updateImage(/*MusicView.StaffInfo staff*/) {
+    private void updateImage() {
 
         if (note == Note.REST) {
             image = JMusicNodeFactory.createRest(length);

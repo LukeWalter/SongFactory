@@ -1,6 +1,9 @@
 package songfactory.ui;
 
+import songfactory.music.Accidental;
 import songfactory.music.Measure;
+import songfactory.music.MusicNode;
+import songfactory.music.Note;
 import songfactory.ui.notation.*;
 
 import javax.swing.*;
@@ -33,6 +36,7 @@ public class MusicView extends JComponent {
         updateStaff();
 
         this.measures = new LinkedList<>();
+        measures.add(new Measure());
 
     } // Constructor
 
@@ -108,13 +112,25 @@ public class MusicView extends JComponent {
         c.setLocation(x + 60, y + height / 2);
         c.paintNode(g);
 
-        int noteOffset = x + 150;
+        int nodeOffset = x + 150;
+        int nodeSpacing = 30;
+        int numNodes = 0;
 
-        JNote e = new EighthNote();
-        e.setAccidental(new Sharp());
-        e.setLocation(new Point(noteOffset, staff.line4));
-        this.snapToLine(e);
-        e.paintNode(g);
+        for (Measure measure : measures) {
+
+            for (MusicNode node : measure.getNodes()) {
+
+                JMusicNode e = node.getImage();
+                e.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
+                e.paintNode(g);
+
+                numNodes++;
+
+            } // for
+
+        } // for
+
+        MusicNode n = new MusicNode(Note.C, 0.5, 4, Accidental.FLAT);
 
     } // paintComponent
 
