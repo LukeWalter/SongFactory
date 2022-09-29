@@ -57,4 +57,10 @@ public class JMusicNode extends JComponent {
 
     } // paintComponent
 
+    @Override
+    public String toString() {
+        return "Basic JMusicNode";
+
+    } // toString
+
 } // JMusicNode

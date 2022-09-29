@@ -50,4 +50,10 @@ public class JNote extends JMusicNode {
 
     } // setAccidentalLocation
 
+    @Override
+    public String toString() {
+        return "Basic JNote";
+
+    } // toString
+
 } // JNote

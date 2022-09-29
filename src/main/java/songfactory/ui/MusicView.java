@@ -10,10 +10,10 @@ import java.util.List;
 
 public class MusicView extends JComponent {
 
-    private class StaffInfo {
-        int x, y, width, height;
-        Integer line1, line2, line3, line4, line5;
-        Integer space1, space2, space3, space4;
+    public class StaffInfo {
+        public int x, y, width, height;
+        public Integer line1, line2, line3, line4, line5;
+        public Integer space1, space2, space3, space4;
 
     } // StaffInfo
 
@@ -21,8 +21,6 @@ public class MusicView extends JComponent {
     private StaffInfo staff;
 
     private List<Measure> measures;
-
-    private List<JMusicNode> musicNodes;
 
     public MusicView() {
 
@@ -35,7 +33,6 @@ public class MusicView extends JComponent {
         updateStaff();
 
         this.measures = new LinkedList<>();
-        this.musicNodes = new LinkedList<>();
 
     } // Constructor
 
@@ -64,7 +61,7 @@ public class MusicView extends JComponent {
         dimensions.setSize(dimensions.getWidth() + 10, dimensions.getHeight());
         updateStaff();
 
-        invalidate();
+        revalidate();
         repaint();
 
     } // updateComponent
@@ -118,7 +115,6 @@ public class MusicView extends JComponent {
         e.setLocation(new Point(noteOffset, staff.line4));
         this.snapToLine(e);
         e.paintNode(g);
-        System.out.println(e instanceof JNote);
 
     } // paintComponent
 

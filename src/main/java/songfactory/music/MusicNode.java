@@ -1,5 +1,10 @@
 package songfactory.music;
 
+import songfactory.ui.MusicView;
+import songfactory.ui.notation.*;
+
+import java.awt.*;
+
 public class MusicNode {
 
     private Note note;
@@ -7,6 +12,8 @@ public class MusicNode {
 
     private int octave;
     private double length;
+
+    private JMusicNode image;
 
     public MusicNode(Note note, double length) {
         this(note, length, 4, null);
@@ -19,18 +26,26 @@ public class MusicNode {
     } // Constructor
 
     public MusicNode(Note note, double length, int octave, Accidental accidental) {
+
         this.note = note;
         this.length = length;
         this.octave = octave;
         this.accidental = accidental;
+        this.updateImage();
 
     } // Constructor
 
     public MusicNode(MusicNode other) {
-        this.note = other.note;
-        this.length = other.length;
-        this.octave = other.octave;
-        this.accidental = other.accidental;
+
+        if (other != null) {
+            this.note = other.note;
+            this.length = other.length;
+            this.octave = other.octave;
+            this.accidental = other.accidental;
+
+        } // if
+
+        this.updateImage();
 
     } // Constructor
 
@@ -141,6 +156,25 @@ public class MusicNode {
         this.length = length;
 
     } // setLength
+
+    public JMusicNode getImage() {
+        return image;
+
+    } // getImage
+
+    public void updateImage(/*MusicView.StaffInfo staff*/) {
+
+        if (note == Note.REST) {
+            image = JMusicNodeFactory.createRest(length);
+
+        } else {
+            JNote noteImage = JMusicNodeFactory.createNote(length);
+            noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidental));
+            image = noteImage;
+
+        } // if
+
+    } // updateImage
 
     public String toString() {
         return "" + note + " " + length + " " + octave + " " + accidental;

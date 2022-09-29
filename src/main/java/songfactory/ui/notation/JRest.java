@@ -9,4 +9,10 @@ public class JRest extends JMusicNode {
 
     } // JRest
 
+    @Override
+    public String toString() {
+        return "Basic JRest";
+
+    } // toString
+
 } // JRest
