@@ -113,16 +113,12 @@ public class MusicView extends JComponent {
 
         int noteOffset = x + 150;
 
-        JMusicNode e = new EighthNote();
-        e.setLocation(noteOffset, staff.line4 + 2);
-        JMusicNode r = new Natural();
-        r.setLocation(noteOffset, staff.line4 + 2);
-
+        JNote e = new EighthNote();
+        e.setAccidental(new Sharp());
+        e.setLocation(new Point(noteOffset, staff.line4));
         this.snapToLine(e);
-        this.snapToLine(r);
-
         e.paintNode(g);
-        r.paintNode(g);
+        System.out.println(e instanceof JNote);
 
     } // paintComponent
 
@@ -140,7 +136,7 @@ public class MusicView extends JComponent {
         };
 
         for (Integer posY : validPositions) {
-            
+
             int currDiff = Math.abs(currY - posY);
 
             if (currDiff < diff) {
@@ -151,7 +147,7 @@ public class MusicView extends JComponent {
 
         } // for
 
-        n.setLocation(n.getX(), snapY);
+        n.setLocation(new Point(n.getX(), snapY));
 
     } // snapToLine
 

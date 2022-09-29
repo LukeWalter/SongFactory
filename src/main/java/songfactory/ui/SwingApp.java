@@ -140,9 +140,8 @@ public class SwingApp {
         JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
         inScrollPane.setBackground(Color.WHITE);
         placeholder = new JLabel("Welcome to SongFactory!");
-        inScrollPane.add(placeholder);
+//        inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
-//        inScrollPane.add(t);
 
 
         JScrollPane displayArea = new JScrollPane(
