@@ -73,6 +73,29 @@ public class JMusicNode extends JComponent {
 
     } // paintComponent
 
+    public boolean containsX(int x) {
+
+        int minX = this.getX() - (xOffset / 2);
+        int maxX = this.getX() + (xOffset / 2);
+
+        return (x >= minX && x <= maxX);
+
+    } // inXRange
+
+    public boolean containsY(int y) {
+
+        int minY = this.getY() - (yOffset / 2);
+        int maxY = this.getY() + (yOffset / 2);
+
+        return (y >= minY && y <= maxY);
+
+    } // inXRange
+
+    public boolean containsPoint(Point p) {
+        return (this.containsX((int)(p.getX())) && this.containsY((int)(p.getY())));
+
+    } // inBoundingBox
+
     @Override
     public String toString() {
         return "Basic JMusicNode";

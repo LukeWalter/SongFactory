@@ -29,6 +29,7 @@ public class MusicView extends JComponent {
 
     private List<Measure> measures;
     private JMusicNode previewNode;
+    private boolean placing;
 
     public MusicView(SwingApp app) {
 
@@ -53,12 +54,26 @@ public class MusicView extends JComponent {
         this.staff.pitchTable = new HashMap<>();
         updateStaff();
 
+        placing = false;
+
 
         this.addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent e) {
 
                 Point mousePosition = new Point(e.getX(), e.getY());
+
+                for (MusicNode n : MusicSequence.getAsSequence(measures)) {
+                    JMusicNode image = n.getImage();
+                    if (image.containsPoint(mousePosition)) {
+                        System.out.println(image.getNodeRef());
+                        return;
+
+                    } // if
+
+                } // for
+
+                placing = true;
 
                 switch (app.getSelectType()) {
 
@@ -117,9 +132,14 @@ public class MusicView extends JComponent {
             } // mousePressed
 
             public void mouseReleased(MouseEvent e) {
-                process(previewNode);
-                previewNode = null;
-                updateComponent();
+
+                if (placing) {
+                    process(previewNode);
+                    previewNode = null;
+                    updateComponent();
+                    placing = false;
+
+                } // if
 
             } // mouseReleased
 
@@ -128,10 +148,16 @@ public class MusicView extends JComponent {
         this.addMouseMotionListener(new MouseAdapter() {
 
             public void mouseDragged(MouseEvent e) {
-                Point mousePosition = new Point(e.getX(), e.getY());
-                previewNode.setLocation(mousePosition);
-                snapToLine(previewNode);
-                updateComponent();
+
+                if (placing) {
+
+                    Point mousePosition = new Point(e.getX(), e.getY());
+                    previewNode.setLocation(mousePosition);
+                    snapToLine(previewNode);
+                    snapToNode(previewNode);
+                    updateComponent();
+
+                } // if
 
             } // mouseDragged
 
@@ -291,6 +317,26 @@ public class MusicView extends JComponent {
 
     } // paintComponent
 
+    private void snapToNode(JMusicNode n) {
+
+        int currX = n.getX();
+        int snapX = currX;
+
+        for (MusicNode node : MusicSequence.getAsSequence(measures)) {
+
+            JMusicNode image = node.getImage();
+            if (image.containsX(currX)) {
+                snapX = image.getX();
+                break;
+
+            } // if
+
+        } // for
+
+        n.setLocation(snapX, n.getY());
+
+    } // snapToNode
+
     private void snapToLine(JMusicNode n) {
 
         int currY = n.getY();
@@ -363,7 +409,10 @@ public class MusicView extends JComponent {
 
         for (int i = 0; i < seq.size(); i++) {
 
-            if (nx < seq.get(i).getImage().getX()) {
+            if (nx == seq.get(i).getImage().getX()) {
+                System.out.println("Snap!");
+
+            } else if (nx < seq.get(i).getImage().getX()) {
 //                System.out.println(i + " " + seq.get(i));
                 seq.add(i, newNode);
                 added = true;

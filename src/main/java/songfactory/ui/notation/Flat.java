@@ -5,7 +5,7 @@ import java.awt.Dimension;
 public class Flat extends JAccidental {
 
     public Flat() {
-        super(FLAT, 17, 14, new Dimension(0, 0));
+        super(FLAT, 17, 14, new Dimension(15, 15));
 
     } // Constructor
 

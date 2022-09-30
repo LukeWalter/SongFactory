@@ -177,11 +177,15 @@ public class MusicNode {
 
         if (note == Note.REST) {
             image = JMusicNodeFactory.createRest(length);
+            image.setNodeRef(this);
 
         } else {
+
             JNote noteImage = JMusicNodeFactory.createNote(length);
             noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidental));
+
             image = noteImage;
+            image.setNodeRef(this);
 
         } // if
 
