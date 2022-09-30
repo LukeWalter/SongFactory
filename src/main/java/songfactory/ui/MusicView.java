@@ -5,10 +5,14 @@ import songfactory.ui.notation.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MusicView extends JComponent {
+
+    private SwingApp app;
 
     public class StaffInfo {
         public int x, y, width, height;
@@ -21,17 +25,19 @@ public class MusicView extends JComponent {
     private StaffInfo staff;
 
     private List<Measure> measures;
+    private JMusicNode previewNode;
 
-    public MusicView() {
+    public MusicView(SwingApp app) {
 
         super();
+
+        this.app = app;
 
         this.measures = new LinkedList<>();
         measures.add(new Measure());
         measures.add(new Measure());
         measures.add(new Measure());
         measures.add(new Measure());
-        System.out.println(MusicSequence.getAsSequence(measures));
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
@@ -42,6 +48,85 @@ public class MusicView extends JComponent {
 
         this.staff = new StaffInfo();
         updateStaff();
+
+
+        this.addMouseListener(new MouseAdapter() {
+
+            public void mousePressed(MouseEvent e) {
+
+                Point mousePosition = new Point(e.getX(), e.getY());
+
+                switch (app.getSelectType()) {
+
+                    case 0: {
+
+                        double length = app.getSelectLength();
+                        JMusicNode selected = JMusicNodeFactory.createNote(length);
+                        selected.setLocation(mousePosition);
+                        previewNode = selected;
+
+                        break;
+
+                    } // 0
+
+                    case 1: {
+
+                        double length = app.getSelectLength();
+                        JMusicNode selected = JMusicNodeFactory.createRest(length);
+                        selected.setLocation(mousePosition);
+                        previewNode = selected;
+
+                        break;
+
+                    } // 0
+
+                    case 2: {
+
+                        JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.FLAT);
+                        selected.setLocation(mousePosition);
+                        previewNode = selected;
+
+                        break;
+
+                    } // 0
+
+                    case 3: {
+
+                        JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.SHARP);
+                        selected.setLocation(mousePosition);
+                        previewNode = selected;
+
+                        break;
+
+                    } // 0
+
+                    default: break;
+
+                } // switch
+
+                updateComponent();
+
+            } // mousePressed
+
+            public void mouseReleased(MouseEvent e) {
+                process(previewNode);
+                previewNode = null;
+
+            } // mouseReleased
+
+        });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+
+            public void mouseDragged(MouseEvent e) {
+                Point mousePosition = new Point(e.getX(), e.getY());
+                previewNode.setLocation(mousePosition);
+                snapToLine(previewNode);
+                updateComponent();
+
+            } // mouseDragged
+
+        });
 
     } // Constructor
 
@@ -162,7 +247,10 @@ public class MusicView extends JComponent {
 
         } // for
 
-        MusicNode n = new MusicNode(Note.C, 0.5, 4, Accidental.FLAT);
+        if (previewNode != null) {
+            previewNode.paintNode(g);
+
+        } // if
 
     } // paintComponent
 
@@ -194,5 +282,83 @@ public class MusicView extends JComponent {
         n.setLocation(new Point(n.getX(), snapY));
 
     } // snapToLine
+
+    public void setPreviewNode(JMusicNode n) {
+        previewNode = n;
+
+    } // preview
+
+    public JMusicNode getPreviewNode() {
+        return previewNode;
+
+    } // getPreviewNode
+
+    public void process(JMusicNode n) {
+
+        int nx = n.getX();
+        int ny = n.getY();
+
+        if (n instanceof JNote && nx >= staff.x + 110 && nx <= staff.x + staff.width - 17) {
+
+            MusicNode newNode = null;
+
+            if (ny == staff.line1) {
+                newNode = new MusicNode(Note.E, app.getSelectLength(), 4);
+
+            } else if (ny == staff.space1) {
+                newNode = new MusicNode(Note.F, app.getSelectLength(), 4);
+
+            } else if (ny == staff.line2) {
+                newNode = new MusicNode(Note.G, app.getSelectLength(), 4);
+
+            } else if (ny == staff.space2) {
+                newNode = new MusicNode(Note.A, app.getSelectLength(), 4);
+
+            } else if (ny == staff.line3) {
+                newNode = new MusicNode(Note.B, app.getSelectLength(), 4);
+
+            } else if (ny == staff.space3) {
+                newNode = new MusicNode(Note.C, app.getSelectLength(), 5);
+
+            } else if (ny == staff.line4) {
+                newNode = new MusicNode(Note.D, app.getSelectLength(), 5);
+
+            } else if (ny == staff.space4) {
+                newNode = new MusicNode(Note.E, app.getSelectLength(), 5);
+
+            } else if (ny == staff.line5) {
+                newNode = new MusicNode(Note.F, app.getSelectLength(), 5);
+
+            } // if
+
+            if (newNode == null) return;
+
+            app.setStatusText("" + newNode.getNote() + newNode.getOctave());
+
+            MusicSequence seq = MusicSequence.getAsSequence(measures);
+
+            for (int i = 0; i < seq.size(); i++) {
+
+                if (nx < seq.get(i).getImage().getX()) {
+                    System.out.println(i + " " + seq.get(i));
+                    seq.add(i, newNode);
+                    break;
+
+                } // if
+
+            } // for
+
+            for (Measure m : measures) {
+                seq = m.processSequence(seq);
+
+            } // for
+
+            updateComponent();
+
+        } // if
+
+
+
+    } // process
 
 } // MusicView

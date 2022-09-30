@@ -9,4 +9,10 @@ public class JAccidental extends JMusicNode {
 
     } // JAccidental
 
+    @Override
+    public String toString() {
+        return "Basic JAccidental";
+
+    } // toString
+
 } // JAccidental

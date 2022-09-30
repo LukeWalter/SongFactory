@@ -1,12 +1,13 @@
 package songfactory.ui;
 
+import songfactory.music.*;
 import songfactory.ui.notation.JMusicNode;
-import songfactory.ui.notation.TrebleClef;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 import javax.swing.*;
-import javax.swing.ScrollPaneConstants.*;
 
 public class SwingApp {
 
@@ -14,9 +15,14 @@ public class SwingApp {
     private JLabel placeholder; // Editable text in display panel
     private JLabel status; // Editable status text
 
+    private JMusicNode selected;
+    private int selectType;
+    private JSlider noteLength;
+
     public SwingApp() {
 
         staffNum = 4;
+        selectType = 0;
 
         // Initial frame
         JFrame frame = new JFrame();
@@ -36,8 +42,8 @@ public class SwingApp {
         file.add(exit);
 
         JMenu edit = new JMenu("Edit");
-        JMenuItem create = new JMenuItem("New Staff");
-        JMenuItem delete = new JMenuItem("Delete Staff");
+        JMenuItem create = new JMenuItem("New Measure");
+        JMenuItem delete = new JMenuItem("Delete Measure");
         delete.setEnabled(false);
         edit.add(create);
         edit.add(delete);
@@ -72,8 +78,8 @@ public class SwingApp {
         ctrlButtons.add(one);
 
 
-        JButton newStaff = new JButton("New Staff");
-        JButton deleteStaff = new JButton("Delete Staff");
+        JButton newStaff = new JButton("New Measure");
+        JButton deleteStaff = new JButton("Delete Measure");
         deleteStaff.setEnabled(false);
 
         JPanel nds = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
@@ -111,7 +117,7 @@ public class SwingApp {
 
 
         // Note length slider
-        JSlider noteLength = new JSlider(JSlider.VERTICAL, 0, 4, 2);
+        noteLength = new JSlider(JSlider.VERTICAL, 0, 4, 2);
         noteLength.setMajorTickSpacing(1);
         noteLength.setSnapToTicks(true);
         Hashtable<Integer, JLabel> labels = new Hashtable<>();
@@ -132,7 +138,7 @@ public class SwingApp {
         // Display window elements
         JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
         inScrollPane.setBackground(Color.WHITE);
-        MusicView sheetMusic = new MusicView();
+        MusicView sheetMusic = new MusicView(this);
         placeholder = new JLabel("Welcome to SongFactory!");
 //        inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
@@ -164,7 +170,7 @@ public class SwingApp {
 
         create.addActionListener(e -> {
             // Add to staffNum and enable delete buttons
-            setStatusText("New Staff");
+            setStatusText("New Measure");
             setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
@@ -173,7 +179,7 @@ public class SwingApp {
 
         delete.addActionListener(e -> {
             // Decrement staffNum and disable delete buttons if not enough staves
-            setStatusText("Delete Staff");
+            setStatusText("Delete Measure");
             if (staffNum > 1) {
 
                 setPlaceholderText(--staffNum + " Staves");
@@ -190,7 +196,7 @@ public class SwingApp {
 
         newStaff.addActionListener(e -> {
             // Add to staffNum and enable delete buttons
-            setStatusText("New Staff");
+            setStatusText("New Measure");
             setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
@@ -200,7 +206,7 @@ public class SwingApp {
 
         deleteStaff.addActionListener(e -> {
             // Decrement staffNum and disable delete buttons if not enough staves
-            setStatusText("Delete Staff");
+            setStatusText("Delete Measure");
             if (staffNum > 1) {
 
                 setPlaceholderText(--staffNum + " Staves");
@@ -223,6 +229,7 @@ public class SwingApp {
                 rest.setSelected(false);
                 flat.setSelected(false);
                 sharp.setSelected(false);
+                selectType = 0;
 
             } else {
                 // Disallow Note from being deselected
@@ -239,6 +246,7 @@ public class SwingApp {
                 note.setSelected(false);
                 flat.setSelected(false);
                 sharp.setSelected(false);
+                selectType = 1;
 
             } else {
                 // Disallow Rest from being deselected
@@ -255,6 +263,7 @@ public class SwingApp {
                 note.setSelected(false);
                 rest.setSelected(false);
                 sharp.setSelected(false);
+                selectType = 2;
 
             } else {
                 // Disallow Flat from being deselected
@@ -271,6 +280,7 @@ public class SwingApp {
                 note.setSelected(false);
                 rest.setSelected(false);
                 flat.setSelected(false);
+                selectType = 3;
 
             } else {
                 // Disallow Sharp from being deselected
@@ -296,14 +306,24 @@ public class SwingApp {
 
     } // Constructor
 
-    private void setPlaceholderText(String newText) {
+    public void setPlaceholderText(String newText) {
         placeholder.setText(newText);
 
     } // setPlaceholderText
 
-    private void setStatusText(String operation) {
+    public void setStatusText(String operation) {
         status.setText(operation);
 
     } // setStatusText
+
+    public int getSelectType() {
+        return selectType;
+
+    } // getSelectType
+
+    public double getSelectLength() {
+        return 1 / Math.pow(2.0, noteLength.getValue());
+
+    } // getSelectLength
 
 } // SwingApp
