@@ -45,7 +45,7 @@ public class MusicView extends JComponent {
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
-                150
+                500
         );
         this.setSize(dimensions);
         this.setPreferredSize(dimensions);
@@ -184,7 +184,7 @@ public class MusicView extends JComponent {
     private void updateStaff() {
 
         staff.x = 0;
-        staff.y = (int)(dimensions.getHeight() / 3.0);
+        staff.y = (int)(dimensions.getHeight() * 2.0 / 5.0);
         staff.width = (int)(dimensions.getWidth());
         staff.height = 50;
 
@@ -217,7 +217,7 @@ public class MusicView extends JComponent {
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
-                150
+                500
         );
         this.setSize(dimensions);
         this.setPreferredSize(dimensions);
@@ -409,10 +409,41 @@ public class MusicView extends JComponent {
 
         for (int i = 0; i < seq.size(); i++) {
 
-            if (nx == seq.get(i).getImage().getX()) {
-                System.out.println("Snap!");
+            MusicNode oldNode = seq.get(i);
 
-            } else if (nx < seq.get(i).getImage().getX()) {
+            if (nx == oldNode.getImage().getX()) {
+
+                double oldLength = oldNode.getLength();
+                double newLength = newNode.getLength();
+
+                seq.remove(i);
+
+                if (oldLength > newLength) {
+                    MusicNode filler = new MusicNode(Note.REST, oldLength - newLength);
+                    seq.addAll(filler.split());
+
+                } else if (newLength > oldLength) {
+
+                    double remaining = newLength - oldLength;
+                    int j = 0;
+
+                    while (remaining > 0) {
+
+                        MusicNode curr = seq.get(i + j);
+                        curr.setNote(Note.REST);
+
+                        remaining -= curr.getLength();
+                        j++;
+
+                    } // while
+
+                } // if
+
+                seq.add(i, newNode);
+                added = true;
+                break;
+
+            } else if (nx < oldNode.getImage().getX()) {
 //                System.out.println(i + " " + seq.get(i));
                 seq.add(i, newNode);
                 added = true;

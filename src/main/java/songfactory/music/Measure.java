@@ -126,7 +126,7 @@ public class Measure {
     } // processSequence
 
     public void combine() {
-
+        System.out.println(nodes);
         HashMap<Integer, Integer> startIndexes = new HashMap<>();
         startIndexes.put(0, 0);
 
@@ -139,7 +139,7 @@ public class Measure {
 
         } // for
 
-//        System.out.println(startIndexes);
+        System.out.println(startIndexes);
         int sIndex = 0;
 
         MusicNode start;
@@ -150,11 +150,11 @@ public class Measure {
             start = nodes.get(sIndex);
             curr = nodes.get(i);
 
-//            System.out.println("" + startIndexes.containsKey(i) + i);
+            System.out.println("" + start + " | " + curr);
             if (curr.getNote() != start.getNote()) {
                 sIndex = i;
 
-            } else if (start.getNote() == Note.REST) {
+            } else if (start.getNote() == Note.REST) {System.out.println("Removing index " + i);
                 start.setLength(start.getLength() + curr.getLength());
                 nodes.remove(curr);
                 i--;
@@ -162,6 +162,8 @@ public class Measure {
             } // if
 
         } // for
+
+        System.out.println(nodes);
 
         for (int i = 0; i < nodes.size(); i++) {
 
@@ -178,7 +180,7 @@ public class Measure {
             i--;
 
         } // for
-
+        System.out.println(nodes);
     } // combine
 
     public int size() {

@@ -75,8 +75,8 @@ public class JMusicNode extends JComponent {
 
     public boolean containsX(int x) {
 
-        int minX = this.getX() - (xOffset / 2);
-        int maxX = this.getX() + (xOffset / 2);
+        int minX = this.getX() - (int)(size.getWidth() / 2);
+        int maxX = this.getX() + (int)(size.getWidth() / 2);
 
         return (x >= minX && x <= maxX);
 
@@ -84,8 +84,8 @@ public class JMusicNode extends JComponent {
 
     public boolean containsY(int y) {
 
-        int minY = this.getY() - (yOffset / 2);
-        int maxY = this.getY() + (yOffset / 2);
+        int minY = this.getY() - (int)(size.getHeight() / 2);
+        int maxY = this.getY() + (int)(size.getHeight() / 2);
 
         return (y >= minY && y <= maxY);
 

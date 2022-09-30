@@ -258,19 +258,6 @@ public class MusicNode {
     } // twoSum
 
     @Override
-    public boolean equals(Object o) {
-
-        if (!(o instanceof MusicNode)) return false;
-        MusicNode other = (MusicNode) o;
-
-        return (this.getNote() == other.getNote())
-                && (this.getLength() == other.getLength())
-                && (this.getOctave() == other.getOctave())
-                && (this.getAccidental() == other.getAccidental());
-
-    } // equals
-
-    @Override
     public String toString() {
         return "" + note + " " + length + " " + octave + " " + accidental;
 
