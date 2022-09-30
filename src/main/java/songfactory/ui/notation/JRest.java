@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class JRest extends JMusicNode {
 
-    public JRest(Image image, int xOffset, int yOffset) {
-        super(image, xOffset, yOffset);
+    public JRest(Image image, int xOffset, int yOffset, Dimension size) {
+        super(image, xOffset, yOffset, size);
 
     } // JRest
 

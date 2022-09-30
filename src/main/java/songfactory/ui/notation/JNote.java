@@ -7,8 +7,8 @@ public class JNote extends JMusicNode {
 
     public JAccidental accidental;
 
-    public JNote(Image image, int xOffset, int yOffset) {
-        super(image, xOffset, yOffset);
+    public JNote(Image image, int xOffset, int yOffset, Dimension size) {
+        super(image, xOffset, yOffset, size);
 
     } // JNote
 

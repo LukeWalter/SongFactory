@@ -210,23 +210,23 @@ public class MusicNode {
 
         if (Conversion.noteTable.containsKey(lengthOne)) {
 //            System.out.println("Note length of " + n1.getLength() + " exists!");
-            broken.add(n1);
+            broken.addFirst(n1);
 
         } else {
 
 //            System.out.println("Splitting note length of " + n1.getLength() + "...");
-            broken.addAll(n1.split());
+            broken.addAll(0, n1.split());
 
         } // if
 
         if (Conversion.noteTable.containsKey(lengthTwo)) {
 //            System.out.println("Note length of " + n2.getLength() + " exists!");
-            broken.add(n2);
+            broken.addFirst(n2);
 
         } else {
 
 //            System.out.println("Splitting note length of " + n2.getLength() + "...");
-            broken.addAll(n2.split());
+            broken.addAll(0, n2.split());
 
         } // if
 

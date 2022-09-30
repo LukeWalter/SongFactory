@@ -1,5 +1,7 @@
 package songfactory.ui.notation;
 
+import songfactory.music.MusicNode;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -27,9 +29,12 @@ public class JMusicNode extends JComponent {
     protected int xOffset;
     protected int yOffset;
     protected Image image;
+    protected Dimension size;
     protected Dimension dimensions;
 
-    public JMusicNode(Image image, int xOffset, int yOffset) {
+    protected MusicNode nodeRef;
+
+    public JMusicNode(Image image, int xOffset, int yOffset, Dimension size) {
 
         super();
 
@@ -38,6 +43,7 @@ public class JMusicNode extends JComponent {
         this.yOffset = yOffset;
 
         this.dimensions = new Dimension(this.image.getWidth(this), this.image.getHeight(this));
+        this.size = size;
 
     } // JMusicNode
 
@@ -50,6 +56,16 @@ public class JMusicNode extends JComponent {
         return yOffset;
 
     } // getYOffset
+
+    public MusicNode getNodeRef() {
+        return nodeRef;
+
+    } // getNodeRef
+
+    public void setNodeRef(MusicNode nodeRef) {
+        this.nodeRef = nodeRef;
+
+    } // setNodeRef
 
     public void paintNode(Graphics g) {
 //        super.paintComponent(g);

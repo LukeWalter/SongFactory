@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class JAccidental extends JMusicNode {
 
-    public JAccidental(Image image, int xOffset, int yOffset) {
-        super(image, xOffset, yOffset);
+    public JAccidental(Image image, int xOffset, int yOffset, Dimension size) {
+        super(image, xOffset, yOffset, size);
 
     } // JAccidental
 
