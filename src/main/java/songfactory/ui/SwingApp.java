@@ -10,13 +10,13 @@ import javax.swing.ScrollPaneConstants.*;
 
 public class SwingApp {
 
-    int staffNum; // Number of staves
+    private int staffNum; // Number of staves
     private JLabel placeholder; // Editable text in display panel
     private JLabel status; // Editable status text
 
     public SwingApp() {
 
-        staffNum = 1;
+        staffNum = 4;
 
         // Initial frame
         JFrame frame = new JFrame();
@@ -129,21 +129,15 @@ public class SwingApp {
         sets.add(noteLength);
         ctrlButtons.add(sets);
 
-
-        // Music Components
-
-        MusicView sheetMusic = new MusicView();
-//        JMusicNode t = new TrebleClef();
-
         // Display window elements
-        JPanel display = new JPanel(new BorderLayout());
         JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
         inScrollPane.setBackground(Color.WHITE);
+        MusicView sheetMusic = new MusicView();
         placeholder = new JLabel("Welcome to SongFactory!");
 //        inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
 
-
+        JPanel display = new JPanel(new BorderLayout());
         JScrollPane displayArea = new JScrollPane(
                 inScrollPane,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -174,14 +168,17 @@ public class SwingApp {
             setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
-            sheetMusic.updateComponent();
+            sheetMusic.addMeasure();
         });
 
         delete.addActionListener(e -> {
             // Decrement staffNum and disable delete buttons if not enough staves
             setStatusText("Delete Staff");
             if (staffNum > 1) {
+
                 setPlaceholderText(--staffNum + " Staves");
+                sheetMusic.removeMeasure();
+
                 if (staffNum == 1) {
                     delete.setEnabled(false);
                     deleteStaff.setEnabled(false);
@@ -197,6 +194,7 @@ public class SwingApp {
             setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
+            sheetMusic.addMeasure();
 
         });
 
@@ -204,7 +202,10 @@ public class SwingApp {
             // Decrement staffNum and disable delete buttons if not enough staves
             setStatusText("Delete Staff");
             if (staffNum > 1) {
+
                 setPlaceholderText(--staffNum + " Staves");
+                sheetMusic.removeMeasure();
+
                 if (staffNum == 1) {
                     delete.setEnabled(false);
                     deleteStaff.setEnabled(false);

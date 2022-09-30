@@ -37,6 +37,7 @@ public class MusicView extends JComponent {
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
                 100
         );
+        this.setSize(dimensions);
         this.setPreferredSize(dimensions);
 
         this.staff = new StaffInfo();
@@ -44,6 +45,21 @@ public class MusicView extends JComponent {
 
     } // Constructor
 
+    public void addMeasure() {
+        measures.add(new Measure());
+        updateComponent();
+
+    } // addMeasure
+
+    public void removeMeasure() {
+
+        if (measures.size() > 1) {
+            measures.remove(measures.size() - 1);
+            updateComponent();
+
+        } // if
+
+    } // addMeasure
 
     private void updateStaff() {
 
@@ -67,10 +83,12 @@ public class MusicView extends JComponent {
 
     public void updateComponent() {
 
+
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
                 100
         );
+        this.setSize(dimensions);
         this.setPreferredSize(dimensions);
 
         updateStaff();
