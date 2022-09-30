@@ -246,13 +246,29 @@ public class MusicView extends JComponent {
         int nodeSpacing = 50;
         int numNodes = 0;
 
+        HashMap<Pair<Note, Integer>, Integer> locationTable = Conversion.reverse(staff.pitchTable);
+//        System.out.println(locationTable);
+
         for (Measure measure : measures) {
 
             for (MusicNode node : measure.getNodes()) {
 
                 JMusicNode i = node.getImage();
-                if (node.getNote() == Note.REST) i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
-                else i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, i.getY()));
+
+                if (node.getNote() == Note.REST) {
+                    i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
+
+                } else {
+//                    System.out.println(node);
+                    Pair<Note, Integer> pitch = new Pair(node.getNote(), node.getOctave());
+//                    System.out.println();
+                    i.setLocation(new Point(
+                            nodeOffset + nodeSpacing * numNodes,
+                            locationTable.get(new Pair(node.getNote(), node.getOctave()))
+                    ));
+
+                } // if
+
                 i.paintNode(g);
 
                 numNodes++;
@@ -344,7 +360,7 @@ public class MusicView extends JComponent {
         for (int i = 0; i < seq.size(); i++) {
 
             if (nx < seq.get(i).getImage().getX()) {
-                System.out.println(i + " " + seq.get(i));
+//                System.out.println(i + " " + seq.get(i));
                 seq.add(i, newNode);
                 added = true;
                 break;
@@ -367,6 +383,7 @@ public class MusicView extends JComponent {
 
         } // while
 
+        app.setDeletable(measures.size());
         updateComponent();
 
     } // process

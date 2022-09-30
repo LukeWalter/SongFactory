@@ -40,4 +40,16 @@ public class Conversion {
 
     } // initialize
 
+    public static <K, V> HashMap<V, K> reverse(HashMap<K, V> original) {
+
+        HashMap<V, K> reversed = new HashMap<>();
+        for (HashMap.Entry<K, V> entry : original.entrySet()) {
+            reversed.put(entry.getValue(), entry.getKey());
+
+        } // for
+
+        return reversed;
+
+    } // reverse
+
 } // Conversion

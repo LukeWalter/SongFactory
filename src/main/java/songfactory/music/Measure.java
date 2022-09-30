@@ -120,6 +120,7 @@ public class Measure {
         } // if
 
         nodes = newNodes;
+        this.combine();
         return seq;
 
     } // processSequence
@@ -127,14 +128,9 @@ public class Measure {
     public void combine() {
 
         HashMap<Integer, Integer> startIndexes = new HashMap<>();
+        startIndexes.put(0, 0);
 
-        for (int i = 0; i < this.size(); i++) {
-
-            if (i == 0) {
-                startIndexes.put(0, 0);
-                continue;
-
-            } // if
+        for (int i = 1; i < this.size(); i++) {
 
             if (nodes.get(i).getNote() != nodes.get(i - 1).getNote()) {
                 startIndexes.put(i, i);
@@ -143,8 +139,45 @@ public class Measure {
 
         } // for
 
-        System.out.println(startIndexes);
-        throw new UnsupportedOperationException("Still working on this!");
+//        System.out.println(startIndexes);
+        int sIndex = 0;
+
+        MusicNode start;
+        MusicNode curr;
+
+        for (int i = 1; i < nodes.size(); i++) {
+
+            start = nodes.get(sIndex);
+            curr = nodes.get(i);
+
+//            System.out.println("" + startIndexes.containsKey(i) + i);
+            if (curr.getNote() != start.getNote()) {
+                sIndex = i;
+
+            } else if (start.getNote() == Note.REST) {
+                start.setLength(start.getLength() + curr.getLength());
+                nodes.remove(curr);
+                i--;
+
+            } // if
+
+        } // for
+
+        for (int i = 0; i < nodes.size(); i++) {
+
+            curr = nodes.get(i);
+            List<MusicNode> replace = curr.split();
+
+            for (MusicNode n : replace) {
+                nodes.add(i, n);
+                i++;
+
+            } // for
+
+            nodes.remove(curr);
+            i--;
+
+        } // for
 
     } // combine
 

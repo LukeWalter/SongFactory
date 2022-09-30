@@ -16,6 +16,8 @@ public class SwingApp {
     private JMusicNode selected;
     private int selectType;
     private JSlider noteLength;
+    private JButton delete;
+    private JMenuItem deleteMenu;
 
     public SwingApp() {
 
@@ -40,9 +42,9 @@ public class SwingApp {
 
         JMenu edit = new JMenu("Edit");
         JMenuItem create = new JMenuItem("New Measure");
-        JMenuItem delete = new JMenuItem("Delete Measure");
+        deleteMenu = new JMenuItem("Delete Measure");
         edit.add(create);
-        edit.add(delete);
+        edit.add(deleteMenu);
 
         JMenu help = new JMenu("Help");
 
@@ -75,11 +77,11 @@ public class SwingApp {
 
 
         JButton newStaff = new JButton("New Measure");
-        JButton deleteStaff = new JButton("Delete Measure");
+        delete = new JButton("Delete Measure");
 
         JPanel nds = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         nds.add(newStaff);
-        nds.add(deleteStaff);
+        nds.add(delete);
         ctrlButtons.add(nds);
 
         JSeparator two = new JSeparator();
@@ -162,52 +164,30 @@ public class SwingApp {
         stop.addActionListener(e -> setStatusText("Stop"));
 
         create.addActionListener(e -> {
-            // Enable delete buttons
             setStatusText("New Measure");
-            delete.setEnabled(true);
-            deleteStaff.setEnabled(true);
             sheetMusic.addMeasure();
+            setDeletable(sheetMusic.getNumMeasures());
+
         });
 
-        delete.addActionListener(e -> {
-            // Disable delete buttons if not enough staves
+        deleteMenu.addActionListener(e -> {
             setStatusText("Delete Measure");
-            if (sheetMusic.getNumMeasures() > 1) {
+            sheetMusic.removeMeasure();
+            setDeletable(sheetMusic.getNumMeasures());
 
-                sheetMusic.removeMeasure();
-
-                if (sheetMusic.getNumMeasures() == 1) {
-                    delete.setEnabled(false);
-                    deleteStaff.setEnabled(false);
-
-                } // if
-
-            } // if
         });
 
         newStaff.addActionListener(e -> {
-            // Enable delete buttons
             setStatusText("New Measure");
-            delete.setEnabled(true);
-            deleteStaff.setEnabled(true);
             sheetMusic.addMeasure();
+            setDeletable(sheetMusic.getNumMeasures());
 
         });
 
-        deleteStaff.addActionListener(e -> {
-            // Disable delete buttons if not enough staves
+        delete.addActionListener(e -> {
             setStatusText("Delete Measure");
-            if (sheetMusic.getNumMeasures() > 1) {
-
-                sheetMusic.removeMeasure();
-
-                if (sheetMusic.getNumMeasures() == 1) {
-                    delete.setEnabled(false);
-                    deleteStaff.setEnabled(false);
-
-                } // if
-
-            } // if
+            sheetMusic.removeMeasure();
+            setDeletable(sheetMusic.getNumMeasures());
 
         });
 
@@ -309,5 +289,19 @@ public class SwingApp {
         return 1 / Math.pow(2.0, noteLength.getValue());
 
     } // getSelectLength
+
+    public void setDeletable(int length) {
+
+        if (length > 1) {
+            delete.setEnabled(true);
+            deleteMenu.setEnabled(true);
+
+        } else {
+            delete.setEnabled(false);
+            deleteMenu.setEnabled(false);
+
+        } // if
+
+    } // setDeletable
 
 } // SwingApp
