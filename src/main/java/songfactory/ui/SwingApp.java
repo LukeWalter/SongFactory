@@ -11,8 +11,6 @@ import javax.swing.*;
 
 public class SwingApp {
 
-    private int staffNum; // Number of staves
-    private JLabel placeholder; // Editable text in display panel
     private JLabel status; // Editable status text
 
     private JMusicNode selected;
@@ -21,7 +19,6 @@ public class SwingApp {
 
     public SwingApp() {
 
-        staffNum = 4;
         selectType = 0;
 
         // Initial frame
@@ -44,7 +41,6 @@ public class SwingApp {
         JMenu edit = new JMenu("Edit");
         JMenuItem create = new JMenuItem("New Measure");
         JMenuItem delete = new JMenuItem("Delete Measure");
-        delete.setEnabled(false);
         edit.add(create);
         edit.add(delete);
 
@@ -80,7 +76,6 @@ public class SwingApp {
 
         JButton newStaff = new JButton("New Measure");
         JButton deleteStaff = new JButton("Delete Measure");
-        deleteStaff.setEnabled(false);
 
         JPanel nds = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         nds.add(newStaff);
@@ -139,8 +134,6 @@ public class SwingApp {
         JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
         inScrollPane.setBackground(Color.WHITE);
         MusicView sheetMusic = new MusicView(this);
-        placeholder = new JLabel("Welcome to SongFactory!");
-//        inScrollPane.add(placeholder);
         inScrollPane.add(sheetMusic);
 
         JPanel display = new JPanel(new BorderLayout());
@@ -169,23 +162,21 @@ public class SwingApp {
         stop.addActionListener(e -> setStatusText("Stop"));
 
         create.addActionListener(e -> {
-            // Add to staffNum and enable delete buttons
+            // Enable delete buttons
             setStatusText("New Measure");
-            setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
             sheetMusic.addMeasure();
         });
 
         delete.addActionListener(e -> {
-            // Decrement staffNum and disable delete buttons if not enough staves
+            // Disable delete buttons if not enough staves
             setStatusText("Delete Measure");
-            if (staffNum > 1) {
+            if (sheetMusic.getNumMeasures() > 1) {
 
-                setPlaceholderText(--staffNum + " Staves");
                 sheetMusic.removeMeasure();
 
-                if (staffNum == 1) {
+                if (sheetMusic.getNumMeasures() == 1) {
                     delete.setEnabled(false);
                     deleteStaff.setEnabled(false);
 
@@ -195,9 +186,8 @@ public class SwingApp {
         });
 
         newStaff.addActionListener(e -> {
-            // Add to staffNum and enable delete buttons
+            // Enable delete buttons
             setStatusText("New Measure");
-            setPlaceholderText(++staffNum + " Staves");
             delete.setEnabled(true);
             deleteStaff.setEnabled(true);
             sheetMusic.addMeasure();
@@ -205,14 +195,13 @@ public class SwingApp {
         });
 
         deleteStaff.addActionListener(e -> {
-            // Decrement staffNum and disable delete buttons if not enough staves
+            // Disable delete buttons if not enough staves
             setStatusText("Delete Measure");
-            if (staffNum > 1) {
+            if (sheetMusic.getNumMeasures() > 1) {
 
-                setPlaceholderText(--staffNum + " Staves");
                 sheetMusic.removeMeasure();
 
-                if (staffNum == 1) {
+                if (sheetMusic.getNumMeasures() == 1) {
                     delete.setEnabled(false);
                     deleteStaff.setEnabled(false);
 
@@ -305,11 +294,6 @@ public class SwingApp {
         frame.setVisible(true);
 
     } // Constructor
-
-    public void setPlaceholderText(String newText) {
-        placeholder.setText(newText);
-
-    } // setPlaceholderText
 
     public void setStatusText(String operation) {
         status.setText(operation);

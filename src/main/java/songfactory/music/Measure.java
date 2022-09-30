@@ -1,6 +1,8 @@
 package songfactory.music;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Measure {
@@ -74,26 +76,46 @@ public class Measure {
 
             } else {
 
+                double leftover = seq.get(i).getLength() - remaining;
+
                 MusicNode broken1 = new MusicNode(seq.get(i));
-                MusicNode broken2 = new MusicNode(seq.get(i));
-
                 broken1.setLength(remaining);
-                broken2.setLength(seq.get(i).getLength() - remaining);
 
-                seq.remove(i);
-                i--;
+                if (Conversion.noteTable.containsKey(remaining)) {
+                    newNodes.add(broken1);
 
-                newNodes.add(broken1);
-                seq.add(0, broken2);
+                } else {
+//                    System.out.println("For this measure | " + broken1);
+                    newNodes.addAll(broken1.split());
+
+                } // if
 
                 remaining = 0;
+
+
+                MusicNode broken2 = new MusicNode(seq.get(i));
+                broken2.setLength(leftover);
+
+                seq.remove(i);
+
+                if (Conversion.noteTable.containsKey(leftover)) {
+                    seq.add(0, broken2);
+
+                } else {
+//                    System.out.println("For next measure | " + broken2);
+                    seq.addAll(0, broken2.split());
+
+                } // if
+
+                i--;
+
 
             } // if
 
         } // for
 
         if (remaining > 0) {
-            newNodes.add(new MusicNode(Note.REST, remaining));
+            newNodes.addAll((new MusicNode(Note.REST, remaining)).split());
 
         } // if
 
@@ -101,6 +123,30 @@ public class Measure {
         return seq;
 
     } // processSequence
+
+    public void combine() {
+
+        HashMap<Integer, Integer> startIndexes = new HashMap<>();
+
+        for (int i = 0; i < this.size(); i++) {
+
+            if (i == 0) {
+                startIndexes.put(0, 0);
+                continue;
+
+            } // if
+
+            if (nodes.get(i).getNote() != nodes.get(i - 1).getNote()) {
+                startIndexes.put(i, i);
+
+            } // if
+
+        } // for
+
+        System.out.println(startIndexes);
+        throw new UnsupportedOperationException("Still working on this!");
+
+    } // combine
 
     public int size() {
         return nodes.size();

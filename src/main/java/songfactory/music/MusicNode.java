@@ -4,6 +4,9 @@ import songfactory.ui.MusicView;
 import songfactory.ui.notation.*;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MusicNode {
 
@@ -31,7 +34,7 @@ public class MusicNode {
         this.length = length;
         this.octave = octave;
         this.accidental = accidental;
-        this.updateImage();
+        if (Conversion.noteTable.containsKey(this.length)) this.updateImage();
 
     } // Constructor
 
@@ -45,7 +48,7 @@ public class MusicNode {
 
         } // if
 
-        this.updateImage();
+        if (Conversion.noteTable.containsKey(this.length)) this.updateImage();
 
     } // Constructor
 
@@ -166,6 +169,11 @@ public class MusicNode {
 
     private void updateImage() {
 
+        if (!Conversion.noteTable.containsKey(length)) {
+            return;
+
+        } // if
+
         if (note == Note.REST) {
             image = JMusicNodeFactory.createRest(length);
 
@@ -177,6 +185,72 @@ public class MusicNode {
         } // if
 
     } // updateImage
+
+    public List<MusicNode> split() {
+
+        LinkedList<MusicNode> broken = new LinkedList<>();
+
+        if (Conversion.noteTable.containsKey(length)) {
+            broken.add(this);
+            return broken;
+
+        } // if
+
+        Double[] keys = Conversion.noteTable.keySet().toArray(Double[]::new);
+        double lengthOne = extractNode(keys, length);
+        double lengthTwo = length - lengthOne;
+
+
+        MusicNode n1 = new MusicNode(this);
+        n1.setLength(lengthOne);
+
+        MusicNode n2 = new MusicNode(this);
+        n2.setLength(lengthTwo);
+
+        if (Conversion.noteTable.containsKey(lengthOne)) {
+//            System.out.println("Note length of " + n1.getLength() + " exists!");
+            broken.add(n1);
+
+        } else {
+
+//            System.out.println("Splitting note length of " + n1.getLength() + "...");
+            broken.addAll(n1.split());
+
+        } // if
+
+        if (Conversion.noteTable.containsKey(lengthTwo)) {
+//            System.out.println("Note length of " + n2.getLength() + " exists!");
+            broken.add(n2);
+
+        } else {
+
+//            System.out.println("Splitting note length of " + n2.getLength() + "...");
+            broken.addAll(n2.split());
+
+        } // if
+
+//        System.out.println(this + " -> " + broken);
+        return broken;
+
+    } // split
+
+    private double extractNode(Double[] keys, double target) {
+
+        double solution = 0;
+
+        for (int i = keys.length - 1; i >= 0; i--) {
+
+            if (keys[i] < target) {
+                solution = keys[i];
+                break;
+
+            } // if
+
+        } // for
+
+        return solution;
+
+    } // twoSum
 
     public String toString() {
         return "" + note + " " + length + " " + octave + " " + accidental;

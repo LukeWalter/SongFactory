@@ -1,5 +1,6 @@
 package songfactory.ui;
 
+import songfactory.Pair;
 import songfactory.music.*;
 import songfactory.ui.notation.*;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,8 +18,9 @@ public class MusicView extends JComponent {
 
     public class StaffInfo {
         public int x, y, width, height;
-        public Integer line1, line2, line3, line4, line5;
-        public Integer space1, space2, space3, space4;
+        public int line1, line2, line3, line4, line5;
+        public int space1, space2, space3, space4;
+        public HashMap<Integer, Pair<Note, Integer>> pitchTable;
 
     } // StaffInfo
 
@@ -47,6 +50,7 @@ public class MusicView extends JComponent {
         this.setPreferredSize(dimensions);
 
         this.staff = new StaffInfo();
+        this.staff.pitchTable = new HashMap<>();
         updateStaff();
 
 
@@ -111,6 +115,7 @@ public class MusicView extends JComponent {
             public void mouseReleased(MouseEvent e) {
                 process(previewNode);
                 previewNode = null;
+                updateComponent();
 
             } // mouseReleased
 
@@ -163,6 +168,17 @@ public class MusicView extends JComponent {
         staff.space2 = staff.y + staff.height * 5 / 8;
         staff.space3 = staff.y + staff.height * 3 / 8;
         staff.space4 = staff.y + staff.height * 1 / 8;
+
+        staff.pitchTable.clear();
+        staff.pitchTable.put(staff.line1, new Pair(Note.E, 4));
+        staff.pitchTable.put(staff.space1, new Pair(Note.F, 4));
+        staff.pitchTable.put(staff.line2, new Pair(Note.G, 4));
+        staff.pitchTable.put(staff.space2, new Pair(Note.A, 4));
+        staff.pitchTable.put(staff.line3, new Pair(Note.B, 4));
+        staff.pitchTable.put(staff.space3, new Pair(Note.C, 5));
+        staff.pitchTable.put(staff.line4, new Pair(Note.D, 5));
+        staff.pitchTable.put(staff.space4, new Pair(Note.E, 5));
+        staff.pitchTable.put(staff.line5, new Pair(Note.F, 5));
 
     } // updateStaff
 
@@ -234,9 +250,10 @@ public class MusicView extends JComponent {
 
             for (MusicNode node : measure.getNodes()) {
 
-                JMusicNode e = node.getImage();
-                e.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
-                e.paintNode(g);
+                JMusicNode i = node.getImage();
+                if (node.getNote() == Note.REST) i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
+                else i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, i.getY()));
+                i.paintNode(g);
 
                 numNodes++;
 
@@ -261,7 +278,7 @@ public class MusicView extends JComponent {
         int diff = Integer.MAX_VALUE;
         int snapY = currY;
 
-        Integer[] validPositions = {
+        int[] validPositions = {
                 staff.line1, staff.space1, staff.line2,
                 staff.space2, staff.line3, staff.space3,
                 staff.line4, staff.space4, staff.line5
@@ -298,67 +315,65 @@ public class MusicView extends JComponent {
         int nx = n.getX();
         int ny = n.getY();
 
-        if (n instanceof JNote && nx >= staff.x + 110 && nx <= staff.x + staff.width - 17) {
+        boolean inXRange = (nx >= staff.x + 110 && nx <= staff.x + staff.width - 17);
 
-            MusicNode newNode = null;
+        MusicNode newNode = null;
 
-            if (ny == staff.line1) {
-                newNode = new MusicNode(Note.E, app.getSelectLength(), 4);
+        if (n instanceof JNote && inXRange) {
+            Pair<Note, Integer> pitch = staff.pitchTable.get(ny);
+            newNode = new MusicNode(pitch.first, app.getSelectLength(), pitch.second);
+            newNode.getImage().setLocation(new Point(n.getX(), n.getY()));
 
-            } else if (ny == staff.space1) {
-                newNode = new MusicNode(Note.F, app.getSelectLength(), 4);
+        } else if (n instanceof JRest && inXRange) {
+            newNode = new MusicNode(Note.REST, app.getSelectLength());
+            newNode.getImage().setLocation(new Point(n.getX(), staff.line3));
 
-            } else if (ny == staff.line2) {
-                newNode = new MusicNode(Note.G, app.getSelectLength(), 4);
-
-            } else if (ny == staff.space2) {
-                newNode = new MusicNode(Note.A, app.getSelectLength(), 4);
-
-            } else if (ny == staff.line3) {
-                newNode = new MusicNode(Note.B, app.getSelectLength(), 4);
-
-            } else if (ny == staff.space3) {
-                newNode = new MusicNode(Note.C, app.getSelectLength(), 5);
-
-            } else if (ny == staff.line4) {
-                newNode = new MusicNode(Note.D, app.getSelectLength(), 5);
-
-            } else if (ny == staff.space4) {
-                newNode = new MusicNode(Note.E, app.getSelectLength(), 5);
-
-            } else if (ny == staff.line5) {
-                newNode = new MusicNode(Note.F, app.getSelectLength(), 5);
-
-            } // if
-
-            if (newNode == null) return;
-
-            app.setStatusText("" + newNode.getNote() + newNode.getOctave());
-
-            MusicSequence seq = MusicSequence.getAsSequence(measures);
-
-            for (int i = 0; i < seq.size(); i++) {
-
-                if (nx < seq.get(i).getImage().getX()) {
-                    System.out.println(i + " " + seq.get(i));
-                    seq.add(i, newNode);
-                    break;
-
-                } // if
-
-            } // for
-
-            for (Measure m : measures) {
-                seq = m.processSequence(seq);
-
-            } // for
-
-            updateComponent();
+        } else if (n instanceof JAccidental && inXRange) {
+            // Next assignment
 
         } // if
 
+        if (newNode == null) return;
 
+        String status = (newNode.getNote() == Note.REST) ? "Rest" : "" + newNode.getNote() + newNode.getOctave();
+        app.setStatusText(status);
+
+        MusicSequence seq = MusicSequence.getAsSequence(measures);
+        boolean added = false;
+
+        for (int i = 0; i < seq.size(); i++) {
+
+            if (nx < seq.get(i).getImage().getX()) {
+                System.out.println(i + " " + seq.get(i));
+                seq.add(i, newNode);
+                added = true;
+                break;
+
+            } // if
+
+        } // for
+
+        if (!added) seq.add(newNode);
+
+        for (Measure m : measures) {
+            seq = m.processSequence(seq);
+
+        } // for
+
+        while (!seq.isEmpty()) {
+            Measure newMeasure = new Measure();
+            seq = newMeasure.processSequence(seq);
+            measures.add(newMeasure);
+
+        } // while
+
+        updateComponent();
 
     } // process
+
+    public int getNumMeasures() {
+        return measures.size();
+
+    } // getSize
 
 } // MusicView
