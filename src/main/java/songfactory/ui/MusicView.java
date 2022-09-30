@@ -44,7 +44,7 @@ public class MusicView extends JComponent {
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
-                100
+                150
         );
         this.setSize(dimensions);
         this.setPreferredSize(dimensions);
@@ -68,6 +68,7 @@ public class MusicView extends JComponent {
                         JMusicNode selected = JMusicNodeFactory.createNote(length);
                         selected.setLocation(mousePosition);
                         previewNode = selected;
+                        snapToLine(previewNode);
 
                         break;
 
@@ -79,6 +80,7 @@ public class MusicView extends JComponent {
                         JMusicNode selected = JMusicNodeFactory.createRest(length);
                         selected.setLocation(mousePosition);
                         previewNode = selected;
+                        snapToLine(previewNode);
 
                         break;
 
@@ -89,6 +91,7 @@ public class MusicView extends JComponent {
                         JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.FLAT);
                         selected.setLocation(mousePosition);
                         previewNode = selected;
+                        snapToLine(previewNode);
 
                         break;
 
@@ -99,6 +102,7 @@ public class MusicView extends JComponent {
                         JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.SHARP);
                         selected.setLocation(mousePosition);
                         previewNode = selected;
+                        snapToLine(previewNode);
 
                         break;
 
@@ -154,7 +158,7 @@ public class MusicView extends JComponent {
     private void updateStaff() {
 
         staff.x = 0;
-        staff.y = (int)(dimensions.getHeight() / 4.0);
+        staff.y = (int)(dimensions.getHeight() / 3.0);
         staff.width = (int)(dimensions.getWidth());
         staff.height = 50;
 
@@ -187,7 +191,7 @@ public class MusicView extends JComponent {
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
-                100
+                150
         );
         this.setSize(dimensions);
         this.setPreferredSize(dimensions);

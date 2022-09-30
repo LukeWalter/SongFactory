@@ -54,4 +54,18 @@ public class MusicSequence extends LinkedList<MusicNode> {
 
     } // getTotalNoteLength
 
+    @Override
+    public boolean isEmpty() {
+
+        if (this.size() == 0) return true;
+
+        for (MusicNode n : this) {
+            if (n.getNote() != Note.REST) return false;
+
+        } // for
+
+        return true;
+
+    } // isEmpty
+
 } // MusicSequence
