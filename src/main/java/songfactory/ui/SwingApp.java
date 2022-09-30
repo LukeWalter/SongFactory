@@ -19,6 +19,11 @@ public class SwingApp {
     private JButton delete;
     private JMenuItem deleteMenu;
 
+    private JRadioButton note;
+    private JRadioButton rest;
+    private JRadioButton flat;
+    private JRadioButton sharp;
+
     public SwingApp() {
 
         selectType = 0;
@@ -102,14 +107,14 @@ public class SwingApp {
         JPanel addSettings = new JPanel();
         addSettings.setLayout(new BoxLayout(addSettings, BoxLayout.Y_AXIS));
 
-        JRadioButton note = new JRadioButton("Note");
+        note = new JRadioButton("Note");
         note.setSelected(true);
         addSettings.add(note);
-        JRadioButton rest = new JRadioButton("Rest");
+        rest = new JRadioButton("Rest");
         addSettings.add(rest);
-        JRadioButton flat = new JRadioButton("Flat");
+        flat = new JRadioButton("Flat");
         addSettings.add(flat);
-        JRadioButton sharp = new JRadioButton("Sharp");
+        sharp = new JRadioButton("Sharp");
         addSettings.add(sharp);
 
 
@@ -289,6 +294,25 @@ public class SwingApp {
         return 1 / Math.pow(2.0, noteLength.getValue());
 
     } // getSelectLength
+
+    public void setSelectLength(double n) {
+        noteLength.setValue((int)(Math.log(1.0 / n) / Math.log(2)));
+
+    } // setSelectLength
+
+    public void setNodeTypeStatus(int n) {
+
+        switch (n) {
+
+            case 0: note.doClick(); break;
+            case 1: rest.doClick(); break;
+            case 2: flat.doClick(); break;
+            case 3: sharp.doClick(); break;
+            default: break;
+
+        } // switch
+
+    } // setNodeTypeStatus
 
     public void setDeletable(int length) {
 

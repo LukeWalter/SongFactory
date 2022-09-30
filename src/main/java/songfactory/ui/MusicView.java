@@ -61,19 +61,44 @@ public class MusicView extends JComponent {
 
             public void mousePressed(MouseEvent e) {
 
+                placing = true;
+
                 Point mousePosition = new Point(e.getX(), e.getY());
 
-                for (MusicNode n : MusicSequence.getAsSequence(measures)) {
-                    JMusicNode image = n.getImage();
-                    if (image.containsPoint(mousePosition)) {
-                        System.out.println(image.getNodeRef());
-                        return;
+                for (Measure m : measures) {
 
-                    } // if
+                    MusicSequence mNodes = m.getNodes();
+
+                    for (MusicNode n : mNodes) {
+
+                        JMusicNode image = n.getImage();
+                        if (image.containsPoint(mousePosition)) {
+
+                            System.out.println(mNodes);
+
+                            int index = mNodes.indexOf(n);
+                            mNodes.remove(n);
+                            mNodes.add(index, new MusicNode(Note.REST, n.getLength()));
+
+                            System.out.println(app.getSelectLength() + " " + n.getLength());
+                            app.setSelectLength(n.getLength());
+                            System.out.println(app.getSelectLength());
+                            app.setNodeTypeStatus((n.getNote() == Note.REST) ? 1 : 0);
+
+                            image.setLocation(mousePosition);
+                            previewNode = image;
+                            snapToLine(previewNode);
+
+                            System.out.println(mNodes + " " + previewNode);
+                            updateComponent();
+                            return;
+
+                        } // if
+
+                    } // for
 
                 } // for
 
-                placing = true;
 
                 switch (app.getSelectType()) {
 
