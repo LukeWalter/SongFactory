@@ -389,7 +389,46 @@ public class MusicView extends JComponent {
 
         // Draw selected node if it exists
         if (previewNode != null) {
+
             previewNode.paintNode(g);
+
+            Point previewNodePos = previewNode.getLocation();
+            int pNodeX = (int)(previewNodePos.getX());
+            int pNodeY = (int)(previewNodePos.getY());
+
+            int xChange = 10;
+            int yChange = 10;
+
+            // Draw bounding box
+            Point[] corners = {
+                    new Point(pNodeX + xChange, pNodeY + yChange), // Top right
+                    new Point(pNodeX + xChange, pNodeY - yChange), // Bottom right
+                    new Point(pNodeX - xChange, pNodeY - yChange), // Bottom left
+                    new Point(pNodeX - xChange, pNodeY + yChange)  // Top left
+
+            };
+
+            g2d.setColor(Color.BLUE);
+
+            g2d.drawLine(
+                    (int)(corners[0].getX()), (int)(corners[0].getY()),
+                    (int)(corners[1].getX()), (int)(corners[1].getY())
+            );
+
+            g2d.drawLine(
+                    (int)(corners[1].getX()), (int)(corners[1].getY()),
+                    (int)(corners[2].getX()), (int)(corners[2].getY())
+            );
+
+            g2d.drawLine(
+                    (int)(corners[2].getX()), (int)(corners[2].getY()),
+                    (int)(corners[3].getX()), (int)(corners[3].getY())
+            );
+
+            g2d.drawLine(
+                    (int)(corners[3].getX()), (int)(corners[3].getY()),
+                    (int)(corners[0].getX()), (int)(corners[0].getY())
+            );
 
         } // if
 
