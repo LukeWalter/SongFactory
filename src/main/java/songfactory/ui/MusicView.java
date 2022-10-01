@@ -245,7 +245,7 @@ public class MusicView extends JComponent {
      */
     private void updateStaff() {
 
-        staff.x = 0;
+        staff.x = 50;
         staff.y = (int)(dimensions.getHeight() / 3.0);
         staff.width = (int)(dimensions.getWidth());
         staff.height = 50;

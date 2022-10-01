@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Java Swing application.
@@ -146,10 +147,19 @@ public class SwingApp {
         ctrlButtons.add(sets);
 
         // Display window elements
-        JPanel inScrollPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 20, 20));
+        JPanel inScrollPane = new JPanel();
+        inScrollPane.setLayout(new BoxLayout(inScrollPane, BoxLayout.Y_AXIS));
         inScrollPane.setBackground(Color.WHITE);
+
+        JLabel songTitle = new JLabel("Welcome to SongFactory!");
+        songTitle.setFont(new Font("Serif", Font.BOLD, 36));
+        songTitle.setBorder(new EmptyBorder(50,70,0,0));
+        inScrollPane.add(songTitle);
+
         MusicView sheetMusic = new MusicView(this);
+//        MusicView part2 = new MusicView(this);
         inScrollPane.add(sheetMusic);
+//        inScrollPane.add(part2);
 
         JPanel display = new JPanel(new BorderLayout());
         JScrollPane displayArea = new JScrollPane(
@@ -274,7 +284,7 @@ public class SwingApp {
 
         // Build scene
         frame.setMinimumSize(new Dimension(300, 650));
-        frame.setPreferredSize(new Dimension(700, 650));
+        frame.setPreferredSize(new Dimension(1200, 650));
 
         frame.getContentPane().add(menu, BorderLayout.NORTH);
         control.add(ctrlButtons, BorderLayout.NORTH);
