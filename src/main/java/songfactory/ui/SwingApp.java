@@ -9,21 +9,27 @@ import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 import javax.swing.*;
 
+/**
+ * Java Swing application.
+ */
 public class SwingApp {
 
     private JLabel status; // Editable status text
 
-    private JMusicNode selected;
-    private int selectType;
-    private JSlider noteLength;
-    private JButton delete;
-    private JMenuItem deleteMenu;
+    private int selectType; // Representation of which node type is active (note, rest, flat, sharp)
+    private JSlider noteLength; // Slider that determines note/rest length
+    private JButton delete; // "Delete Measure" button on sidebar
+    private JMenuItem deleteMenu; // "Delete Measure" button in dropdown menu
 
+    // Radio buttons for each node type
     private JRadioButton note;
     private JRadioButton rest;
     private JRadioButton flat;
     private JRadioButton sharp;
 
+    /**
+     * Constructs the swing app and displays it on screen.
+     */
     public SwingApp() {
 
         selectType = 0;
@@ -107,6 +113,8 @@ public class SwingApp {
         JPanel addSettings = new JPanel();
         addSettings.setLayout(new BoxLayout(addSettings, BoxLayout.Y_AXIS));
 
+
+        // Node type radio buttons
         note = new JRadioButton("Note");
         note.setSelected(true);
         addSettings.add(note);
@@ -161,7 +169,6 @@ public class SwingApp {
 
 
         // Event listeners
-
         exit.addActionListener(e -> System.exit(0));
         select.addActionListener(e -> setStatusText("Select"));
         pen.addActionListener(e -> setStatusText("Pen"));
@@ -280,27 +287,56 @@ public class SwingApp {
 
     } // Constructor
 
+    /**
+     * Sets the status text at the bottom of the screen.
+     *
+     * @param operation Name of last performed operation
+     */
     public void setStatusText(String operation) {
         status.setText(operation);
 
     } // setStatusText
 
+    /**
+     * Returns the node type shown by the radio buttons.
+     * (0 = note, 1 = rest, 2 = flat, 3 = sharp)
+     *
+     * @return node type shown by radio buttons
+     */
     public int getSelectType() {
         return selectType;
 
     } // getSelectType
 
+    /**
+     * Returns the decimal value for the type of
+     * note represented by the slider.
+     *
+     * @return true length of slider value for node length
+     */
     public double getSelectLength() {
         return 1 / Math.pow(2.0, noteLength.getValue());
 
     } // getSelectLength
 
+    /**
+     * Sets the position of the node length slider.
+     *
+     * @param n true length of node length to display on the slider
+     */
     public void setSelectLength(double n) {
         noteLength.setValue((int)(Math.log(1.0 / n) / Math.log(2)));
 
     } // setSelectLength
 
-    public void setNodeTypeStatus(int n) {
+    /**
+     * Click one of the node type radio buttons,
+     * causing it to activate.
+     * (0 = note, 1 = rest, 2 = flat, 3 = sharp)
+     *
+     * @param n node type to set radio buttons to
+     */
+    public void setSelectTypeStatus(int n) {
 
         switch (n) {
 
@@ -314,6 +350,11 @@ public class SwingApp {
 
     } // setNodeTypeStatus
 
+    /**
+     * Determines if the delete buttons are active.
+     *
+     * @param length number of measures in a MusicView
+     */
     public void setDeletable(int length) {
 
         if (length > 1) {

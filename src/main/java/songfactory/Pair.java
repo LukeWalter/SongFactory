@@ -1,5 +1,11 @@
 package songfactory;
 
+/**
+ * Simple pair that stores two objects
+ *
+ * @param <A> First object in pair
+ * @param <B> Second object in pair
+ */
 public class Pair<A, B> {
 
     public A first;
