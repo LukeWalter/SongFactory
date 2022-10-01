@@ -3,8 +3,20 @@ package songfactory.music;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * MusicSequence class. Contains a list
+ * of music node objects that can be easily
+ * stored and altered.
+ */
 public class MusicSequence extends LinkedList<MusicNode> {
 
+    /**
+     * Converts a list of measures to a music sequence.
+     *
+     * @param measures input measure list
+     *
+     * @return music sequence containing all nodes from measure list
+     */
     public static MusicSequence getAsSequence(List<Measure> measures) {
 
         MusicSequence output = new MusicSequence();
@@ -18,20 +30,20 @@ public class MusicSequence extends LinkedList<MusicNode> {
 
     } // getAsSequence
 
+    /**
+     * MusicSequence constructor.
+     */
     public MusicSequence() {
         super();
 
     } // Constructor
 
-    public void addAll(MusicNode ... nodes) {
-
-        for (MusicNode n : nodes) {
-            this.add(n);
-
-        } // for
-
-    } // nodes
-
+    /**
+     * Adds every node from another music
+     * sequence into this music sequence.
+     *
+     * @param seq other music sequence
+     */
     public void addAll(MusicSequence seq) {
 
         for (MusicNode n : seq) {
@@ -41,6 +53,11 @@ public class MusicSequence extends LinkedList<MusicNode> {
 
     } // addAll
 
+    /**
+     * Calculates the length of this music sequence.
+     *
+     * @return sum of lengths of all nodes in sequence
+     */
     public double getTotalNodeLength() {
 
         double sum = 0;
@@ -54,6 +71,11 @@ public class MusicSequence extends LinkedList<MusicNode> {
 
     } // getTotalNoteLength
 
+    /**
+     * isEmpty() implementation.
+     *
+     * @return true if no notes or entirely full of rests, false otherwise
+     */
     @Override
     public boolean isEmpty() {
 

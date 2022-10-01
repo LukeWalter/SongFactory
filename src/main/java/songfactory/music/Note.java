@@ -1,5 +1,8 @@
 package songfactory.music;
 
+/**
+ * Enumeration for note variations.
+ */
 public enum Note {
     REST,
     C,

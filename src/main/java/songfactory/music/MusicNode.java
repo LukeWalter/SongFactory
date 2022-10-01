@@ -1,34 +1,55 @@
 package songfactory.music;
 
-import songfactory.ui.MusicView;
 import songfactory.ui.notation.*;
 
-import java.awt.*;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * MusicNode class. Stores the underlying
+ * data behind notes and rests.
+ */
 public class MusicNode {
 
-    private Note note;
-    private Accidental accidental;
+    private Note note; // Note name
+    private Accidental accidental; // Accidental stored by note
 
-    private int octave;
-    private double length;
+    private int octave; // Octave of note
+    private double length; // Length of note
 
-    private JMusicNode image;
+    private JMusicNode image; // Visual representation of note
 
+    /**
+     * MusicNode constructor.
+     *
+     * @param note note name
+     * @param length length of note
+     */
     public MusicNode(Note note, double length) {
         this(note, length, 4, null);
 
     } // Constructor
 
+    /**
+     * MusicNode constructor.
+     *
+     * @param note note name
+     * @param length length of note
+     * @param octave octave of note
+     */
     public MusicNode(Note note, double length, int octave) {
         this(note, length, octave, null);
 
     } // Constructor
 
+    /**
+     * MusicNode constructor.
+     *
+     * @param note note name
+     * @param length length of note
+     * @param octave octave of note
+     * @param accidental accidental stored by note
+     */
     public MusicNode(Note note, double length, int octave, Accidental accidental) {
 
         this.note = note;
@@ -39,6 +60,11 @@ public class MusicNode {
 
     } // Constructor
 
+    /**
+     * MusicNode copy constructor.
+     *
+     * @param other MusicNode object being copied
+     */
     public MusicNode(MusicNode other) {
 
         if (other != null) {
@@ -53,16 +79,31 @@ public class MusicNode {
 
     } // Constructor
 
+    /**
+     * Returns note name.
+     *
+     * @return note name
+     */
     public Note getNote() {
         return note;
 
     } // getNote
 
+    /**
+     * Sets the note name.
+     *
+     * @param note new note name
+     */
     public void setNote(Note note) {
         this.note = note;
 
     } // setNote
 
+    /**
+     * Increases the pitch of a note by one whole step.
+     *
+     * @throws RestException if called on a rest
+     */
     public void incrementNote() throws RestException {
 
         if (note == Note.REST) {
@@ -79,6 +120,11 @@ public class MusicNode {
 
     } // incrementNote
 
+    /**
+     * Decreases the pitch of a note by one whole step.
+     *
+     * @throws RestException if called on a rest
+     */
     public void decrementNote() throws RestException {
 
         if (note == Note.REST) {
@@ -95,17 +141,33 @@ public class MusicNode {
 
     } // decrementNote
 
+    /**
+     * Returns accidental stored by note.
+     *
+     * @return accidental
+     */
     public Accidental getAccidental() {
         return accidental;
 
     } // getAccidental
 
+    /**
+     * Sets accidental stored by note.
+     *
+     * @param accidental accidental to be stored
+     */
     public void setAccidental(Accidental accidental) {
         this.accidental = accidental;
         updateImage();
 
     } // setAccidental
 
+    /**
+     * Loops through different types of sharps that
+     * can be stored by a note.
+     *
+     * @throws RestException if called on a rest
+     */
     public void incrementSharp() throws RestException {
 
         if (note == Note.REST) {
@@ -124,6 +186,12 @@ public class MusicNode {
 
     } // incrementAccidental
 
+    /**
+     * Loops through different types of flats that
+     * can be stored by a note.
+     *
+     * @throws RestException if called on a rest
+     */
     public void incrementFlat() throws RestException {
 
         if (note == Note.REST) {
@@ -142,6 +210,11 @@ public class MusicNode {
 
     } // incrementFlat
 
+    /**
+     * Returns octave of note.
+     *
+     * @return octave
+     */
     public int getOctave() {
         return octave;
 
@@ -152,6 +225,11 @@ public class MusicNode {
 
     } // setOctave
 
+    /**
+     * Returns length of node.
+     *
+     * @return length
+     */
     public double getLength() {
         return length;
 
@@ -163,24 +241,37 @@ public class MusicNode {
 
     } // setLength
 
+    /**
+     * Returns visual representation of node.
+     *
+     * @return image
+     */
     public JMusicNode getImage() {
         return image;
 
     } // getImage
 
+    /**
+     * Updates the image stored by the note to
+     * accurately reflect data stored in this
+     * MusicNode.
+     */
     private void updateImage() {
 
+        // Abort if the node type does not exist
         if (!Conversion.noteTable.containsKey(length)) {
             return;
 
         } // if
 
         if (note == Note.REST) {
+            // Set rest length
             image = JMusicNodeFactory.createRest(length);
             image.setNodeRef(this);
 
         } else {
 
+            // Set note length and accidental
             JNote noteImage = JMusicNodeFactory.createNote(length);
             noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidental));
 
@@ -191,58 +282,70 @@ public class MusicNode {
 
     } // updateImage
 
+    /**
+     * Splits a node of invalid length into a
+     * set of valid nodes.
+     *
+     * @return list of valid nodes
+     */
     public List<MusicNode> split() {
 
         LinkedList<MusicNode> broken = new LinkedList<>();
 
+        // Abort if node type is valid
         if (Conversion.noteTable.containsKey(length)) {
             broken.add(this);
             return broken;
 
         } // if
 
+        // Find the highest valid node length within original length, save remainder
         Double[] keys = Conversion.noteTable.keySet().toArray(Double[]::new);
-        double lengthOne = extractNode(keys, length);
+        double lengthOne = this.extractNode(keys, length);
         double lengthTwo = length - lengthOne;
 
-
+        // Split invalid node into two potentially valid nodes
         MusicNode n1 = new MusicNode(this);
         n1.setLength(lengthOne);
 
         MusicNode n2 = new MusicNode(this);
         n2.setLength(lengthTwo);
 
+        // Split further if needed, add to solution list
         if (Conversion.noteTable.containsKey(lengthOne)) {
-//            System.out.println("Note length of " + n1.getLength() + " exists!");
             broken.addFirst(n1);
 
         } else {
-
-//            System.out.println("Splitting note length of " + n1.getLength() + "...");
             broken.addAll(0, n1.split());
 
         } // if
 
         if (Conversion.noteTable.containsKey(lengthTwo)) {
-//            System.out.println("Note length of " + n2.getLength() + " exists!");
             broken.addFirst(n2);
 
         } else {
-
-//            System.out.println("Splitting note length of " + n2.getLength() + "...");
             broken.addAll(0, n2.split());
 
         } // if
 
-//        System.out.println(this + " -> " + broken);
         return broken;
 
     } // split
 
+    /**
+     * Finds a valid note length within an
+     * invalid note length. Should only be
+     * called in combine().
+     *
+     * @param keys
+     * @param target
+     * @return
+     */
     private double extractNode(Double[] keys, double target) {
 
         double solution = 0;
 
+        // Searches lookup table keys for a maximum value below target
         for (int i = keys.length - 1; i >= 0; i--) {
 
             if (keys[i] < target) {
@@ -255,8 +358,13 @@ public class MusicNode {
 
         return solution;
 
-    } // twoSum
+    } // extractNode
 
+    /**
+     * toString() implementation.
+     *
+     * @return String representation of MusicNode.
+     */
     @Override
     public String toString() {
         return "" + note + " " + length + " " + octave + " " + accidental;

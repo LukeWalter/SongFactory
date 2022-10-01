@@ -1,20 +1,27 @@
 package songfactory.music;
 
 import songfactory.ui.notation.*;
-
 import java.util.HashMap;
 
+/**
+ * Conversion class. Stores useful lookup
+ * tables for converting note lengths to
+ * note types and vice versa.
+ */
 public class Conversion {
-    protected interface INote { JNote make(); } // INote
-    protected interface IRest { JRest make(); } // IRest
-    protected interface IAccidental { JAccidental make(); } // IAccidental
+    protected interface INote { JNote make(); } // Functional interface for note constructors
+    protected interface IRest { JRest make(); } // Functional interface for rest constructors
+    protected interface IAccidental { JAccidental make(); } // Functional interface for accidental constructors
 
     private static boolean initialized = false;
 
-    public static HashMap<Double, INote> noteTable;
-    public static HashMap<Double, IRest> restTable;
-    public static HashMap<Accidental, IAccidental> accidentalTable;
+    public static HashMap<Double, INote> noteTable; // Maps node lengths to note types
+    public static HashMap<Double, IRest> restTable; // Maps node lengths to rest types
+    public static HashMap<Accidental, IAccidental> accidentalTable; // Maps accidental enums to accidental types
 
+    /**
+     * Initializes and populates the lookup tables.
+     */
     public static void initialize() {
 
         if (initialized) return;
@@ -40,6 +47,15 @@ public class Conversion {
 
     } // initialize
 
+    /**
+     * Switches the keys and values in a hashmap.
+     *
+     * @param original hashmap to be reversed
+     * @param <K> key data type for original hashmap
+     * @param <V> value data type for original hashmap
+     *
+     * @return new hashmap with reversed entries
+     */
     public static <K, V> HashMap<V, K> reverse(HashMap<K, V> original) {
 
         HashMap<V, K> reversed = new HashMap<>();
