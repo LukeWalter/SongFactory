@@ -56,7 +56,7 @@ public class MusicNode {
         this.length = length;
         this.octave = octave;
         this.accidental = accidental;
-        if (Conversion.noteTable.containsKey(this.length)) this.updateImage();
+        this.updateImage();
 
     } // Constructor
 
@@ -72,10 +72,9 @@ public class MusicNode {
             this.length = other.length;
             this.octave = other.octave;
             this.accidental = other.accidental;
+            this.updateImage();
 
         } // if
-
-        if (Conversion.noteTable.containsKey(this.length)) this.updateImage();
 
     } // Constructor
 
