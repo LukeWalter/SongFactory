@@ -3,6 +3,7 @@ package songfactory;
 import javax.swing.SwingUtilities;
 import songfactory.music.*;
 import songfactory.ui.SwingApp;
+import songfactory.ui.notation.JMusicNode;
 
 public class MainDriver {
 
@@ -13,6 +14,7 @@ public class MainDriver {
      */
     public static void main(String[] args) {
         Conversion.initialize();
+        JMusicNode.initializeImages();
         SwingUtilities.invokeLater(() -> { SwingApp app = new SwingApp(); });
 
     } // main

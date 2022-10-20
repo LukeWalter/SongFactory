@@ -84,8 +84,6 @@ public class JMusicNode extends JComponent {
 
         super();
 
-        initializeImages();
-
         this.image = image;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
