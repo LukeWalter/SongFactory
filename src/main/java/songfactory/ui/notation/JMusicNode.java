@@ -11,24 +11,26 @@ import javax.swing.*;
 public class JMusicNode extends JComponent {
 
     // Library of images used by extending classes
-    protected static final Image TREBLE_CLEF = (new ImageIcon("src/main/resources/trebleClef.png")).getImage();
-    protected static final Image COMMON_TIME = (new ImageIcon("src/main/resources/commonTime.png")).getImage();
 
-    protected static final Image FLAT = (new ImageIcon("src/main/resources/flat.png")).getImage();
-    protected static final Image SHARP = (new ImageIcon("src/main/resources/sharp.png")).getImage();
-    protected static final Image NATURAL = (new ImageIcon("src/main/resources/natural.png")).getImage();
+    private static final String path = "src/main/resources/";
+    protected static final Image TREBLE_CLEF = (new ImageIcon(path + "trebleClef.png")).getImage();
+    protected static final Image COMMON_TIME = (new ImageIcon(path + "commonTime.png")).getImage();
 
-    protected static final Image SIXTEENTH_NOTE = (new ImageIcon("src/main/resources/sixteenthNote.png")).getImage();
-    protected static final Image EIGHTH_NOTE = (new ImageIcon("src/main/resources/eighthNote.png")).getImage();
-    protected static final Image QUARTER_NOTE = (new ImageIcon("src/main/resources/quarterNote.png")).getImage();
-    protected static final Image HALF_NOTE = (new ImageIcon("src/main/resources/halfNote.png")).getImage();
-    protected static final Image WHOLE_NOTE = (new ImageIcon("src/main/resources/wholeNote.png")).getImage();
+    protected static final Image FLAT = (new ImageIcon(path + "flat.png")).getImage();
+    protected static final Image SHARP = (new ImageIcon(path + "sharp.png")).getImage();
+    protected static final Image NATURAL = (new ImageIcon(path + "natural.png")).getImage();
 
-    protected static final Image SIXTEENTH_REST = (new ImageIcon("src/main/resources/sixteenthRest.png")).getImage();
-    protected static final Image EIGHTH_REST = (new ImageIcon("src/main/resources/eighthRest.png")).getImage();
-    protected static final Image QUARTER_REST = (new ImageIcon("src/main/resources/quarterRest.png")).getImage();
-    protected static final Image HALF_REST = (new ImageIcon("src/main/resources/halfRest.png")).getImage();
-    protected static final Image WHOLE_REST = (new ImageIcon("src/main/resources/wholeRest.png")).getImage();
+    protected static final Image SIXTEENTH_NOTE = (new ImageIcon(path + "sixteenthNote.png")).getImage();
+    protected static final Image EIGHTH_NOTE = (new ImageIcon(path + "eighthNote.png")).getImage();
+    protected static final Image QUARTER_NOTE = (new ImageIcon(path + "quarterNote.png")).getImage();
+    protected static final Image HALF_NOTE = (new ImageIcon(path + "halfNote.png")).getImage();
+    protected static final Image WHOLE_NOTE = (new ImageIcon(path + "wholeNote.png")).getImage();
+
+    protected static final Image SIXTEENTH_REST = (new ImageIcon(path + "sixteenthRest.png")).getImage();
+    protected static final Image EIGHTH_REST = (new ImageIcon(path + "eighthRest.png")).getImage();
+    protected static final Image QUARTER_REST = (new ImageIcon(path + "quarterRest.png")).getImage();
+    protected static final Image HALF_REST = (new ImageIcon(path + "halfRest.png")).getImage();
+    protected static final Image WHOLE_REST = (new ImageIcon(path + "wholeRest.png")).getImage();
 
     protected int xOffset; // Distance from left side to true middle of image
     protected int yOffset; // Distance from top side to true middle of image
