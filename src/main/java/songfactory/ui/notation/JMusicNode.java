@@ -4,6 +4,7 @@ import songfactory.music.MusicNode;
 
 import java.awt.*;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -11,28 +12,13 @@ import javax.swing.*;
  */
 public class JMusicNode extends JComponent {
 
-    private static final String path = "src/main/resources/";
     private static boolean initialized;
 
     // Library of images used by extending classes
-    protected static Image TREBLE_CLEF;
-    protected static Image COMMON_TIME;
-
-    protected static Image FLAT = (new ImageIcon(path + "flat.png")).getImage();
-    protected static Image SHARP = (new ImageIcon(path + "sharp.png")).getImage();
-    protected static Image NATURAL = (new ImageIcon(path + "natural.png")).getImage();
-
-    protected static Image SIXTEENTH_NOTE = (new ImageIcon(path + "sixteenthNote.png")).getImage();
-    protected static Image EIGHTH_NOTE = (new ImageIcon(path + "eighthNote.png")).getImage();
-    protected static Image QUARTER_NOTE = (new ImageIcon(path + "quarterNote.png")).getImage();
-    protected static Image HALF_NOTE = (new ImageIcon(path + "halfNote.png")).getImage();
-    protected static Image WHOLE_NOTE = (new ImageIcon(path + "wholeNote.png")).getImage();
-
-    protected static Image SIXTEENTH_REST = (new ImageIcon(path + "sixteenthRest.png")).getImage();
-    protected static Image EIGHTH_REST = (new ImageIcon(path + "eighthRest.png")).getImage();
-    protected static Image QUARTER_REST = (new ImageIcon(path + "quarterRest.png")).getImage();
-    protected static Image HALF_REST = (new ImageIcon(path + "halfRest.png")).getImage();
-    protected static Image WHOLE_REST = (new ImageIcon(path + "wholeRest.png")).getImage();
+    protected static Image TREBLE_CLEF, COMMON_TIME;
+    protected static Image FLAT, SHARP, NATURAL;
+    protected static Image SIXTEENTH_NOTE, EIGHTH_NOTE, QUARTER_NOTE, HALF_NOTE, WHOLE_NOTE;
+    protected static Image SIXTEENTH_REST, EIGHTH_REST, QUARTER_REST, HALF_REST, WHOLE_REST;
 
     protected int xOffset; // Distance from left side to true middle of image
     protected int yOffset; // Distance from top side to true middle of image
@@ -41,36 +27,42 @@ public class JMusicNode extends JComponent {
 
     protected MusicNode nodeRef; // Reference to back-end data representation of node
 
+    /**
+     * Initializes the note, rest, accidental, and other
+     * images for the staff.
+     */
     public static void initializeImages() {
 
         if (!initialized) {
 
             try {
 
-                TREBLE_CLEF = (new ImageIcon(path + "trebleClef.png")).getImage();
-                COMMON_TIME = (new ImageIcon(path + "commonTime.png")).getImage();
+                TREBLE_CLEF = ImageIO.read(ClassLoader.getSystemResource("trebleClef.png"));
+                COMMON_TIME = ImageIO.read(ClassLoader.getSystemResource("commonTime.png"));
 
-                FLAT = (new ImageIcon(path + "flat.png")).getImage();
-                SHARP = (new ImageIcon(path + "sharp.png")).getImage();
-                NATURAL = (new ImageIcon(path + "natural.png")).getImage();
+                FLAT = ImageIO.read(ClassLoader.getSystemResource("flat.png"));
+                SHARP = ImageIO.read(ClassLoader.getSystemResource("sharp.png"));
+                NATURAL = ImageIO.read(ClassLoader.getSystemResource("natural.png"));
 
-                SIXTEENTH_NOTE = (new ImageIcon(path + "sixteenthNote.png")).getImage();
-                EIGHTH_NOTE = (new ImageIcon(path + "eighthNote.png")).getImage();
-                QUARTER_NOTE = (new ImageIcon(path + "quarterNote.png")).getImage();
-                HALF_NOTE = (new ImageIcon(path + "halfNote.png")).getImage();
-                WHOLE_NOTE = (new ImageIcon(path + "wholeNote.png")).getImage();
+                SIXTEENTH_NOTE = ImageIO.read(ClassLoader.getSystemResource("sixteenthNote.png"));
+                EIGHTH_NOTE = ImageIO.read(ClassLoader.getSystemResource("eighthNote.png"));
+                QUARTER_NOTE = ImageIO.read(ClassLoader.getSystemResource("quarterNote.png"));
+                HALF_NOTE = ImageIO.read(ClassLoader.getSystemResource("halfNote.png"));
+                WHOLE_NOTE = ImageIO.read(ClassLoader.getSystemResource("wholeNote.png"));
 
-                SIXTEENTH_REST = (new ImageIcon(path + "sixteenthRest.png")).getImage();
-                EIGHTH_REST = (new ImageIcon(path + "eighthRest.png")).getImage();
-                QUARTER_REST = (new ImageIcon(path + "quarterRest.png")).getImage();
-                HALF_REST = (new ImageIcon(path + "halfRest.png")).getImage();
-                WHOLE_REST = (new ImageIcon(path + "wholeRest.png")).getImage();
+                SIXTEENTH_REST = ImageIO.read(ClassLoader.getSystemResource("sixteenthRest.png"));
+                EIGHTH_REST = ImageIO.read(ClassLoader.getSystemResource("eighthRest.png"));
+                QUARTER_REST = ImageIO.read(ClassLoader.getSystemResource("quarterRest.png"));
+                HALF_REST = ImageIO.read(ClassLoader.getSystemResource("halfRest.png"));
+                WHOLE_REST = ImageIO.read(ClassLoader.getSystemResource("wholeRest.png"));
 
                 initialized = true;
 
-                if (false) throw new IOException();
-
             } catch (IOException ioe) {
+                System.out.println("There was an issue with your imports.");
+                System.exit(0);
+
+            } catch (IllegalArgumentException iae) {
                 System.out.println("There was an issue with your imports.");
                 System.exit(0);
 
