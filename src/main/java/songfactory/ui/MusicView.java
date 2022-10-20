@@ -544,7 +544,20 @@ public class MusicView extends JComponent {
 
         // Add accidental to an existing note in the measure list based on position
         } else if (n instanceof JAccidental && inXRange) {
-            // Next assignment
+
+            MusicSequence seq = MusicSequence.getAsSequence(measures);
+
+            for (int i = 0; i < seq.size(); i++) {
+
+                JMusicNode image = seq.get(i).getImage();
+
+                if (image instanceof JNote && nx == image.getX()) {
+                    JNote note = (JNote) image;
+                    note.setAccidental((JAccidental) n);
+
+                } // if
+
+            } // for
 
         } // if
 
