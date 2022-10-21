@@ -6,6 +6,7 @@ import songfactory.ui.notation.JMusicNode;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,8 +20,9 @@ public class SwingApp {
 
     private int selectType; // Representation of which node type is active (note, rest, flat, sharp)
     private JSlider noteLength; // Slider that determines note/rest length
-    private JButton delete; // "Delete Measure" button on sidebar
-    private JMenuItem deleteMenu; // "Delete Measure" button in dropdown menu
+    private JButton delete; // "Delete Staff" button on sidebar
+    private JMenuItem deleteMenu; // "Delete Staff" button in dropdown menu
+    private JButton deleteMeasure; // "Delete Measure" button
 
     // Radio buttons for each node type
     private JRadioButton note;
@@ -53,8 +55,8 @@ public class SwingApp {
         file.add(exit);
 
         JMenu edit = new JMenu("Edit");
-        JMenuItem create = new JMenuItem("New Measure");
-        deleteMenu = new JMenuItem("Delete Measure");
+        JMenuItem create = new JMenuItem("New Staff");
+        deleteMenu = new JMenuItem("Delete Staff");
         edit.add(create);
         edit.add(deleteMenu);
 
@@ -88,8 +90,8 @@ public class SwingApp {
         ctrlButtons.add(one);
 
 
-        JButton newStaff = new JButton("New Measure");
-        delete = new JButton("Delete Measure");
+        JButton newStaff = new JButton("New Staff");
+        delete = new JButton("Delete Staff");
 
         JPanel nds = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         nds.add(newStaff);
@@ -98,6 +100,17 @@ public class SwingApp {
 
         JSeparator two = new JSeparator();
         ctrlButtons.add(two);
+
+        JButton newMeasure = new JButton("New Measure");
+        deleteMeasure = new JButton("Delete Measure");
+
+        JPanel msc = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
+        msc.add(newMeasure);
+        msc.add(deleteMeasure);
+        ctrlButtons.add(msc);
+
+        JSeparator twoandahalf = new JSeparator();
+        ctrlButtons.add(twoandahalf);
 
         JButton play = new JButton("Play");
         JButton stop = new JButton("Stop");
@@ -156,10 +169,13 @@ public class SwingApp {
         songTitle.setBorder(new EmptyBorder(50,70,0,0));
         inScrollPane.add(songTitle);
 
-        MusicView sheetMusic = new MusicView(this);
-//        MusicView part2 = new MusicView(this);
-        inScrollPane.add(sheetMusic);
-//        inScrollPane.add(part2);
+        ArrayList<MusicView> sheetMusic = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            MusicView mv = new MusicView(this);
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+
+        } // for
 
         JPanel display = new JPanel(new BorderLayout());
         JScrollPane displayArea = new JScrollPane(
@@ -186,30 +202,66 @@ public class SwingApp {
         stop.addActionListener(e -> setStatusText("Stop"));
 
         create.addActionListener(e -> {
-            setStatusText("New Measure");
-            sheetMusic.addMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
+            setStatusText("New Staff");
+            MusicView mv = new MusicView(this, sheetMusic.get(0).getNumMeasures());
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         deleteMenu.addActionListener(e -> {
-            setStatusText("Delete Measure");
-            sheetMusic.removeMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
+            setStatusText("Delete Staff");
+            MusicView mv = sheetMusic.get(sheetMusic.size() - 1);
+            sheetMusic.remove(mv);
+            inScrollPane.remove(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         newStaff.addActionListener(e -> {
-            setStatusText("New Measure");
-            sheetMusic.addMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
+            setStatusText("New Staff");
+            MusicView mv = new MusicView(this, sheetMusic.get(0).getNumMeasures());
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         delete.addActionListener(e -> {
+            setStatusText("Delete Staff");
+            MusicView mv = sheetMusic.get(sheetMusic.size() - 1);
+            sheetMusic.remove(mv);
+            inScrollPane.remove(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
+
+        });
+
+        newMeasure.addActionListener(e -> {
+            setStatusText("New Measure");
+            for (MusicView mv : sheetMusic) {
+                mv.addMeasure();
+
+            } // for
+            setDeletableMeasure(sheetMusic.get(0).getNumMeasures());
+
+        });
+
+        deleteMeasure.addActionListener(e -> {
             setStatusText("Delete Measure");
-            sheetMusic.removeMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
+            for (MusicView mv : sheetMusic) {
+                mv.removeMeasure();
+
+            } // for
+            setDeletableMeasure(sheetMusic.get(0).getNumMeasures());
 
         });
 
@@ -283,8 +335,8 @@ public class SwingApp {
 
 
         // Build scene
-        frame.setMinimumSize(new Dimension(300, 650));
-        frame.setPreferredSize(new Dimension(1200, 650));
+        frame.setMinimumSize(new Dimension(300, 725));
+        frame.setPreferredSize(new Dimension(1200, 725));
 
         frame.getContentPane().add(menu, BorderLayout.NORTH);
         control.add(ctrlButtons, BorderLayout.NORTH);
@@ -365,7 +417,7 @@ public class SwingApp {
      *
      * @param length number of measures in a MusicView
      */
-    public void setDeletable(int length) {
+    public void setDeletableStaff(int length) {
 
         if (length > 1) {
             delete.setEnabled(true);
@@ -377,6 +429,23 @@ public class SwingApp {
 
         } // if
 
-    } // setDeletable
+    } // setDeletableStaff
+
+    /**
+     * Determines if the delete buttons are active.
+     *
+     * @param length number of measures in a MusicView
+     */
+    public void setDeletableMeasure(int length) {
+
+        if (length > 1) {
+            deleteMeasure.setEnabled(true);
+
+        } else {
+            deleteMeasure.setEnabled(false);
+
+        } // if
+
+    } // setDeletableMeasure
 
 } // SwingApp

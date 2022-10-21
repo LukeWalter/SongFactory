@@ -46,16 +46,27 @@ public class MusicView extends JComponent {
      * @param app reference to overarching application
      */
     public MusicView(SwingApp app) {
+        this(app, 4);
+
+    } // Constructor
+
+    /**
+     * MusicView Constructor.
+     * @param app reference to overarching application
+     * @param numMeasures number of measures to initialize staff with
+     */
+    public MusicView(SwingApp app, int numMeasures) {
 
         super();
 
         this.app = app;
 
         this.measures = new LinkedList<>();
-        measures.add(new Measure());
-        measures.add(new Measure());
-        measures.add(new Measure());
-        measures.add(new Measure());
+
+        for (int i = 0; i < numMeasures; i++) {
+            measures.add(new Measure());
+
+        } // for
 
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
@@ -650,8 +661,8 @@ public class MusicView extends JComponent {
 
         } // while
 
-        // Check if delete buttons should be active
-        app.setDeletable(measures.size());
+        // Check if delete measure button should be active
+        app.setDeletableMeasure(measures.size());
         updateComponent();
 
     } // process
