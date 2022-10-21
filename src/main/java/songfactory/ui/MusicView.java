@@ -29,7 +29,9 @@ public class MusicView extends JComponent {
     public class StaffInfo {
         public int x, y, width, height; // Dimensions of staff
         public int line1, line2, line3, line4, line5; // Line y positions
+        public int lline1, lline2, lline3, lline4; // Ledger line y positions
         public int space1, space2, space3, space4; // Space y positions
+        public int lspace1, lspace2, lspace3, lspace4, lspace5, lspace6; // Space y positions outside staff
         public HashMap<Integer, Pair<Note, Integer>> pitchTable; // Maps y positions to pitches
 
     } // StaffInfo
@@ -261,18 +263,45 @@ public class MusicView extends JComponent {
         staff.width = (int)(dimensions.getWidth());
         staff.height = 50;
 
+        // Line positions
+
+        staff.lline1 = staff.y + staff.height - 1 + staff.height / 4;
+        staff.lline2 = staff.y + staff.height - 1 + staff.height / 2;
+
         staff.line1 = staff.y + staff.height - 1;
         staff.line2 = staff.y + staff.height * 3 / 4;
         staff.line3 = staff.y + staff.height / 2;
         staff.line4 = staff.y + staff.height / 4;
         staff.line5 = staff.y + 1;
 
+        staff.lline3 = staff.y - staff.height / 4;
+        staff.lline4 = staff.y - staff.height / 2;
+
+        // Space positions
+
+        staff.lspace1 = staff.y + staff.height * 13 / 8;
+        staff.lspace2 = staff.y + staff.height * 11 / 8;
+        staff.lspace3 = staff.y + staff.height * 9 / 8;
+
         staff.space1 = staff.y + staff.height * 7 / 8;
         staff.space2 = staff.y + staff.height * 5 / 8;
         staff.space3 = staff.y + staff.height * 3 / 8;
         staff.space4 = staff.y + staff.height * 1 / 8;
 
+        staff.lspace4 = staff.y - staff.height * 1 / 8;
+        staff.lspace5 = staff.y - staff.height * 3 / 8;
+        staff.lspace6 = staff.y - staff.height * 5 / 8;
+
+        // Pitch table
+
         staff.pitchTable.clear();
+
+        staff.pitchTable.put(staff.lspace1, new Pair(Note.F, 3));
+        staff.pitchTable.put(staff.lline1, new Pair(Note.G, 3));
+        staff.pitchTable.put(staff.lspace2, new Pair(Note.A, 3));
+        staff.pitchTable.put(staff.lline2, new Pair(Note.B, 3));
+        staff.pitchTable.put(staff.lspace3, new Pair(Note.C, 4));
+
         staff.pitchTable.put(staff.line1, new Pair(Note.E, 4));
         staff.pitchTable.put(staff.space1, new Pair(Note.F, 4));
         staff.pitchTable.put(staff.line2, new Pair(Note.G, 4));
@@ -282,6 +311,12 @@ public class MusicView extends JComponent {
         staff.pitchTable.put(staff.line4, new Pair(Note.D, 5));
         staff.pitchTable.put(staff.space4, new Pair(Note.E, 5));
         staff.pitchTable.put(staff.line5, new Pair(Note.F, 5));
+
+        staff.pitchTable.put(staff.lspace4, new Pair(Note.G, 5));
+        staff.pitchTable.put(staff.lline3, new Pair(Note.A, 5));
+        staff.pitchTable.put(staff.lspace5, new Pair(Note.B, 5));
+        staff.pitchTable.put(staff.lline4, new Pair(Note.C, 6));
+        staff.pitchTable.put(staff.lspace6, new Pair(Note.D, 6));
 
     } // updateStaff
 
@@ -380,6 +415,8 @@ public class MusicView extends JComponent {
                             nodeOffset + nodeSpacing * numNodes,
                             locationTable.get(new Pair(node.getNote(), node.getOctave()))
                     ));
+
+//                    if (i.getY())
 
                 } // if
 
