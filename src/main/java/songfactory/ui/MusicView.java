@@ -535,7 +535,9 @@ public class MusicView extends JComponent {
         if (n instanceof JNote && inXRange) {
             Pair<Note, Integer> pitch = staff.pitchTable.get(ny);
             newNode = new MusicNode(pitch.first, app.getSelectLength(), pitch.second);
-            newNode.getImage().setLocation(new Point(n.getX(), n.getY()));
+            JNote image = (JNote) newNode.getImage();
+            image.setLocation(new Point(n.getX(), n.getY()));
+            image.setAccidental(((JNote) n).getAccidental());
 
         // Create new rest based on position and length
         } else if (n instanceof JRest && inXRange) {
