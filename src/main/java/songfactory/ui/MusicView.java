@@ -265,8 +265,8 @@ public class MusicView extends JComponent {
 
         // Line positions
 
-        staff.lline1 = staff.y + staff.height - 1 + staff.height / 4;
-        staff.lline2 = staff.y + staff.height - 1 + staff.height / 2;
+        staff.lline1 = staff.y + staff.height - 1 + staff.height / 2;
+        staff.lline2 = staff.y + staff.height - 1 + staff.height / 4;
 
         staff.line1 = staff.y + staff.height - 1;
         staff.line2 = staff.y + staff.height * 3 / 4;
@@ -416,7 +416,33 @@ public class MusicView extends JComponent {
                             locationTable.get(new Pair(node.getNote(), node.getOctave()))
                     ));
 
-//                    if (i.getY())
+                    // Draw ledger lines
+
+                    int iy = i.getY();
+
+                    if (iy > staff.lspace3) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+
+                    } // if
+
+                    if (iy > staff.lspace2) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+
+                    } // if
+
+                    if (iy < staff.lspace4) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
+
+                    } // if
+
+                    if (iy < staff.lspace5) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
+
+                    } // if
 
                 } // if
 
