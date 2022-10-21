@@ -650,8 +650,8 @@ public class MusicView extends JComponent {
 
         } // while
 
-        // Check if delete buttons should be active
-        app.setDeletable(measures.size());
+        // Check if delete measure button should be active
+        app.setDeletableMeasure(measures.size());
         updateComponent();
 
     } // process

@@ -19,8 +19,9 @@ public class SwingApp {
 
     private int selectType; // Representation of which node type is active (note, rest, flat, sharp)
     private JSlider noteLength; // Slider that determines note/rest length
-    private JButton delete; // "Delete Measure" button on sidebar
-    private JMenuItem deleteMenu; // "Delete Measure" button in dropdown menu
+    private JButton delete; // "Delete Staff" button on sidebar
+    private JMenuItem deleteMenu; // "Delete Staff" button in dropdown menu
+    private JButton deleteMeasure; // "Delete Measure" button
 
     // Radio buttons for each node type
     private JRadioButton note;
@@ -53,8 +54,8 @@ public class SwingApp {
         file.add(exit);
 
         JMenu edit = new JMenu("Edit");
-        JMenuItem create = new JMenuItem("New Measure");
-        deleteMenu = new JMenuItem("Delete Measure");
+        JMenuItem create = new JMenuItem("New Staff");
+        deleteMenu = new JMenuItem("Delete Staff");
         edit.add(create);
         edit.add(deleteMenu);
 
@@ -88,8 +89,8 @@ public class SwingApp {
         ctrlButtons.add(one);
 
 
-        JButton newStaff = new JButton("New Measure");
-        delete = new JButton("Delete Measure");
+        JButton newStaff = new JButton("New Staff");
+        delete = new JButton("Delete Staff");
 
         JPanel nds = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
         nds.add(newStaff);
@@ -98,6 +99,17 @@ public class SwingApp {
 
         JSeparator two = new JSeparator();
         ctrlButtons.add(two);
+
+        JButton newMeasure = new JButton("New Measure");
+        deleteMeasure = new JButton("Delete Measure");
+
+        JPanel msc = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
+        msc.add(newMeasure);
+        msc.add(deleteMeasure);
+        ctrlButtons.add(msc);
+
+        JSeparator twoandahalf = new JSeparator();
+        ctrlButtons.add(twoandahalf);
 
         JButton play = new JButton("Play");
         JButton stop = new JButton("Stop");
@@ -186,30 +198,32 @@ public class SwingApp {
         stop.addActionListener(e -> setStatusText("Stop"));
 
         create.addActionListener(e -> {
-            setStatusText("New Measure");
-            sheetMusic.addMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
 
         });
 
         deleteMenu.addActionListener(e -> {
-            setStatusText("Delete Measure");
-            sheetMusic.removeMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
 
         });
 
         newStaff.addActionListener(e -> {
-            setStatusText("New Measure");
-            sheetMusic.addMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
 
         });
 
         delete.addActionListener(e -> {
+
+        });
+
+        newMeasure.addActionListener(e -> {
+            setStatusText("New Measure");
+            sheetMusic.addMeasure();
+            setDeletableMeasure(sheetMusic.getNumMeasures());
+
+        });
+
+        deleteMeasure.addActionListener(e -> {
             setStatusText("Delete Measure");
             sheetMusic.removeMeasure();
-            setDeletable(sheetMusic.getNumMeasures());
+            setDeletableMeasure(sheetMusic.getNumMeasures());
 
         });
 
@@ -365,7 +379,7 @@ public class SwingApp {
      *
      * @param length number of measures in a MusicView
      */
-    public void setDeletable(int length) {
+    public void setDeletableStaff(int length) {
 
         if (length > 1) {
             delete.setEnabled(true);
@@ -377,6 +391,23 @@ public class SwingApp {
 
         } // if
 
-    } // setDeletable
+    } // setDeletableStaff
+
+    /**
+     * Determines if the delete buttons are active.
+     *
+     * @param length number of measures in a MusicView
+     */
+    public void setDeletableMeasure(int length) {
+
+        if (length > 1) {
+            deleteMeasure.setEnabled(true);
+
+        } else {
+            deleteMeasure.setEnabled(false);
+
+        } // if
+
+    } // setDeletableMeasure
 
 } // SwingApp
