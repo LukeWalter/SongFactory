@@ -520,6 +520,34 @@ public class MusicView extends JComponent {
                     (int)(corners[0].getX()), (int)(corners[0].getY())
             );
 
+            // Draw ledger lines
+
+            int iy = previewNode.getY();
+
+            if (iy > staff.lspace3) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+
+            } // if
+
+            if (iy > staff.lspace2) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+
+            } // if
+
+            if (iy < staff.lspace4) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
+
+            } // if
+
+            if (iy < staff.lspace5) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
+
+            } // if
+
         } // if
 
     } // paintComponent
