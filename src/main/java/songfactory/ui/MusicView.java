@@ -214,12 +214,28 @@ public class MusicView extends JComponent {
 
             public void mouseDragged(MouseEvent e) {
 
-                // Drag note with mouse and snap in valid positions
+                // Drag node with mouse and snap in valid positions
                 if (placing) {
                     Point mousePosition = new Point(e.getX(), e.getY());
                     previewNode.setLocation(mousePosition);
+
                     snapToLine(previewNode);
                     snapToNode(previewNode);
+
+                    // Snap accidental to note position
+                    if (previewNode instanceof JNote) {
+                        JNote note = (JNote) previewNode;
+                        JAccidental acc = note.getAccidental();
+
+                        if (acc != null) {
+                            acc.setLocation(previewNode.getLocation());
+                            snapToLine(acc);
+                            snapToNode(acc);
+
+                        } // if
+
+                    } // if
+
                     updateComponent();
 
                 } // if
@@ -296,11 +312,11 @@ public class MusicView extends JComponent {
 
         staff.pitchTable.clear();
 
-        staff.pitchTable.put(staff.lspace1, new Pair(Note.F, 3));
-        staff.pitchTable.put(staff.lline1, new Pair(Note.G, 3));
-        staff.pitchTable.put(staff.lspace2, new Pair(Note.A, 3));
-        staff.pitchTable.put(staff.lline2, new Pair(Note.B, 3));
-        staff.pitchTable.put(staff.lspace3, new Pair(Note.C, 4));
+        staff.pitchTable.put(staff.lspace1, new Pair(Note.G, 3));
+        staff.pitchTable.put(staff.lline1, new Pair(Note.A, 3));
+        staff.pitchTable.put(staff.lspace2, new Pair(Note.B, 3));
+        staff.pitchTable.put(staff.lline2, new Pair(Note.C, 4));
+        staff.pitchTable.put(staff.lspace3, new Pair(Note.D, 4));
 
         staff.pitchTable.put(staff.line1, new Pair(Note.E, 4));
         staff.pitchTable.put(staff.space1, new Pair(Note.F, 4));
@@ -410,7 +426,7 @@ public class MusicView extends JComponent {
                     i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
 
                 } else {
-                    Pair<Note, Integer> pitch = new Pair(node.getNote(), node.getOctave());
+
                     i.setLocation(new Point(
                             nodeOffset + nodeSpacing * numNodes,
                             locationTable.get(new Pair(node.getNote(), node.getOctave()))
