@@ -29,7 +29,9 @@ public class MusicView extends JComponent {
     public class StaffInfo {
         public int x, y, width, height; // Dimensions of staff
         public int line1, line2, line3, line4, line5; // Line y positions
+        public int lline1, lline2, lline3, lline4; // Ledger line y positions
         public int space1, space2, space3, space4; // Space y positions
+        public int lspace1, lspace2, lspace3, lspace4, lspace5, lspace6; // Space y positions outside staff
         public HashMap<Integer, Pair<Note, Integer>> pitchTable; // Maps y positions to pitches
 
     } // StaffInfo
@@ -212,12 +214,28 @@ public class MusicView extends JComponent {
 
             public void mouseDragged(MouseEvent e) {
 
-                // Drag note with mouse and snap in valid positions
+                // Drag node with mouse and snap in valid positions
                 if (placing) {
                     Point mousePosition = new Point(e.getX(), e.getY());
                     previewNode.setLocation(mousePosition);
+
                     snapToLine(previewNode);
                     snapToNode(previewNode);
+
+                    // Snap accidental to note position
+                    if (previewNode instanceof JNote) {
+                        JNote note = (JNote) previewNode;
+                        JAccidental acc = note.getAccidental();
+
+                        if (acc != null) {
+                            acc.setLocation(previewNode.getLocation());
+                            snapToLine(acc);
+                            snapToNode(acc);
+
+                        } // if
+
+                    } // if
+
                     updateComponent();
 
                 } // if
@@ -261,18 +279,45 @@ public class MusicView extends JComponent {
         staff.width = (int)(dimensions.getWidth());
         staff.height = 50;
 
+        // Line positions
+
+        staff.lline1 = staff.y + staff.height - 1 + staff.height / 2;
+        staff.lline2 = staff.y + staff.height - 1 + staff.height / 4;
+
         staff.line1 = staff.y + staff.height - 1;
         staff.line2 = staff.y + staff.height * 3 / 4;
         staff.line3 = staff.y + staff.height / 2;
         staff.line4 = staff.y + staff.height / 4;
         staff.line5 = staff.y + 1;
 
+        staff.lline3 = staff.y - staff.height / 4;
+        staff.lline4 = staff.y - staff.height / 2;
+
+        // Space positions
+
+        staff.lspace1 = staff.y + staff.height * 13 / 8;
+        staff.lspace2 = staff.y + staff.height * 11 / 8;
+        staff.lspace3 = staff.y + staff.height * 9 / 8;
+
         staff.space1 = staff.y + staff.height * 7 / 8;
         staff.space2 = staff.y + staff.height * 5 / 8;
         staff.space3 = staff.y + staff.height * 3 / 8;
         staff.space4 = staff.y + staff.height * 1 / 8;
 
+        staff.lspace4 = staff.y - staff.height * 1 / 8;
+        staff.lspace5 = staff.y - staff.height * 3 / 8;
+        staff.lspace6 = staff.y - staff.height * 5 / 8;
+
+        // Pitch table
+
         staff.pitchTable.clear();
+
+        staff.pitchTable.put(staff.lspace1, new Pair(Note.G, 3));
+        staff.pitchTable.put(staff.lline1, new Pair(Note.A, 3));
+        staff.pitchTable.put(staff.lspace2, new Pair(Note.B, 3));
+        staff.pitchTable.put(staff.lline2, new Pair(Note.C, 4));
+        staff.pitchTable.put(staff.lspace3, new Pair(Note.D, 4));
+
         staff.pitchTable.put(staff.line1, new Pair(Note.E, 4));
         staff.pitchTable.put(staff.space1, new Pair(Note.F, 4));
         staff.pitchTable.put(staff.line2, new Pair(Note.G, 4));
@@ -282,6 +327,12 @@ public class MusicView extends JComponent {
         staff.pitchTable.put(staff.line4, new Pair(Note.D, 5));
         staff.pitchTable.put(staff.space4, new Pair(Note.E, 5));
         staff.pitchTable.put(staff.line5, new Pair(Note.F, 5));
+
+        staff.pitchTable.put(staff.lspace4, new Pair(Note.G, 5));
+        staff.pitchTable.put(staff.lline3, new Pair(Note.A, 5));
+        staff.pitchTable.put(staff.lspace5, new Pair(Note.B, 5));
+        staff.pitchTable.put(staff.lline4, new Pair(Note.C, 6));
+        staff.pitchTable.put(staff.lspace6, new Pair(Note.D, 6));
 
     } // updateStaff
 
@@ -375,11 +426,39 @@ public class MusicView extends JComponent {
                     i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
 
                 } else {
-                    Pair<Note, Integer> pitch = new Pair(node.getNote(), node.getOctave());
+
                     i.setLocation(new Point(
                             nodeOffset + nodeSpacing * numNodes,
                             locationTable.get(new Pair(node.getNote(), node.getOctave()))
                     ));
+
+                    // Draw ledger lines
+
+                    int iy = i.getY();
+
+                    if (iy > staff.lspace3) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+
+                    } // if
+
+                    if (iy > staff.lspace2) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+
+                    } // if
+
+                    if (iy < staff.lspace4) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
+
+                    } // if
+
+                    if (iy < staff.lspace5) {
+                        int ix = i.getX();
+                        g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
+
+                    } // if
 
                 } // if
 
@@ -440,6 +519,34 @@ public class MusicView extends JComponent {
                     (int)(corners[3].getX()), (int)(corners[3].getY()),
                     (int)(corners[0].getX()), (int)(corners[0].getY())
             );
+
+            // Draw ledger lines
+
+            int iy = previewNode.getY();
+
+            if (iy > staff.lspace3) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+
+            } // if
+
+            if (iy > staff.lspace2) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+
+            } // if
+
+            if (iy < staff.lspace4) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
+
+            } // if
+
+            if (iy < staff.lspace5) {
+                int ix = previewNode.getX();
+                g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
+
+            } // if
 
         } // if
 
