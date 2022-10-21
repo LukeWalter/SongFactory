@@ -6,6 +6,7 @@ import songfactory.ui.notation.JMusicNode;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -168,10 +169,13 @@ public class SwingApp {
         songTitle.setBorder(new EmptyBorder(50,70,0,0));
         inScrollPane.add(songTitle);
 
-        MusicView sheetMusic = new MusicView(this);
-//        MusicView part2 = new MusicView(this);
-        inScrollPane.add(sheetMusic);
-//        inScrollPane.add(part2);
+        ArrayList<MusicView> sheetMusic = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            MusicView mv = new MusicView(this);
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+
+        } // for
 
         JPanel display = new JPanel(new BorderLayout());
         JScrollPane displayArea = new JScrollPane(
@@ -198,32 +202,66 @@ public class SwingApp {
         stop.addActionListener(e -> setStatusText("Stop"));
 
         create.addActionListener(e -> {
+            setStatusText("New Staff");
+            MusicView mv = new MusicView(this, sheetMusic.get(0).getNumMeasures());
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         deleteMenu.addActionListener(e -> {
+            setStatusText("Delete Staff");
+            MusicView mv = sheetMusic.get(sheetMusic.size() - 1);
+            sheetMusic.remove(mv);
+            inScrollPane.remove(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         newStaff.addActionListener(e -> {
+            setStatusText("New Staff");
+            MusicView mv = new MusicView(this, sheetMusic.get(0).getNumMeasures());
+            sheetMusic.add(mv);
+            inScrollPane.add(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         delete.addActionListener(e -> {
+            setStatusText("Delete Staff");
+            MusicView mv = sheetMusic.get(sheetMusic.size() - 1);
+            sheetMusic.remove(mv);
+            inScrollPane.remove(mv);
+            setDeletableStaff(sheetMusic.size());
+            inScrollPane.revalidate();
+            inScrollPane.repaint();
 
         });
 
         newMeasure.addActionListener(e -> {
             setStatusText("New Measure");
-            sheetMusic.addMeasure();
-            setDeletableMeasure(sheetMusic.getNumMeasures());
+            for (MusicView mv : sheetMusic) {
+                mv.addMeasure();
+
+            } // for
+            setDeletableMeasure(sheetMusic.get(0).getNumMeasures());
 
         });
 
         deleteMeasure.addActionListener(e -> {
             setStatusText("Delete Measure");
-            sheetMusic.removeMeasure();
-            setDeletableMeasure(sheetMusic.getNumMeasures());
+            for (MusicView mv : sheetMusic) {
+                mv.removeMeasure();
+
+            } // for
+            setDeletableMeasure(sheetMusic.get(0).getNumMeasures());
 
         });
 
