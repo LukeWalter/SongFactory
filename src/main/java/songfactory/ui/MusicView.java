@@ -533,9 +533,14 @@ public class MusicView extends JComponent {
 
         // Create new note based on position and length
         if (n instanceof JNote && inXRange) {
+            JNote note = ((JNote) n);
+            JAccidental acc = note.getAccidental();
             Pair<Note, Integer> pitch = staff.pitchTable.get(ny);
             newNode = new MusicNode(pitch.first, app.getSelectLength(), pitch.second);
-            newNode.getImage().setLocation(new Point(n.getX(), n.getY()));
+            if (acc != null) newNode.setAccidental(acc.getAccidental());
+            JNote image = (JNote) newNode.getImage();
+            image.setLocation(new Point(n.getX(), n.getY()));
+            image.setAccidental(acc);
 
         // Create new rest based on position and length
         } else if (n instanceof JRest && inXRange) {
@@ -544,14 +549,30 @@ public class MusicView extends JComponent {
 
         // Add accidental to an existing note in the measure list based on position
         } else if (n instanceof JAccidental && inXRange) {
-            // Next assignment
+
+            MusicSequence seq = MusicSequence.getAsSequence(measures);
+
+            for (int i = 0; i < seq.size(); i++) {
+
+                JMusicNode oldNode = seq.get(i).getImage();
+
+                if (oldNode instanceof JNote && nx == oldNode.getX()) {
+                    JNote note = (JNote) oldNode;
+                    JAccidental accidental = (JAccidental) n;
+                    note.setAccidental(accidental);
+                    note.getNodeRef().setAccidental(accidental.getAccidental());
+
+                } // if
+
+            } // for
 
         } // if
 
         if (newNode == null) return;
 
         // Update the application status bar
-        String status = (newNode.getNote() == Note.REST) ? "Rest" : "" + newNode.getNote() + newNode.getOctave();
+        String acc = (newNode.getAccidental() == null) ? "" : "" + newNode.getAccidental();
+        String status = (newNode.getNote() == Note.REST) ? "Rest" : "" + newNode.getNote() + acc + newNode.getOctave();
         app.setStatusText(status);
 
         // Convert measure list to music sequence for editing

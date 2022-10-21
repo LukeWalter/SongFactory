@@ -1,5 +1,7 @@
 package songfactory.ui.notation;
 
+import songfactory.music.Accidental;
+
 import java.awt.Dimension;
 
 /**
@@ -12,6 +14,7 @@ public class Sharp extends JAccidental {
      */
     public Sharp() {
         super(SHARP, 17, 12, new Dimension(15, 15));
+        accidental = Accidental.SHARP;
 
     } // Constructor
 
