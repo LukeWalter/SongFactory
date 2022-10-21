@@ -1,11 +1,15 @@
 package songfactory.ui.notation;
 
+import songfactory.music.Accidental;
+
 import java.awt.*;
 
 /**
  * General class for accidental symbols.
  */
 public class JAccidental extends JMusicNode {
+
+    protected Accidental accidental;
 
     /**
      * JAccidental constructor.
@@ -19,6 +23,11 @@ public class JAccidental extends JMusicNode {
         super(image, xOffset, yOffset, size);
 
     } // JAccidental
+
+    public Accidental getAccidental() {
+        return accidental;
+
+    } // getAccidental
 
     /**
      * toString() implementation.
