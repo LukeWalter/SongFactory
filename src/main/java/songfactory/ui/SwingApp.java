@@ -335,8 +335,8 @@ public class SwingApp {
 
 
         // Build scene
-        frame.setMinimumSize(new Dimension(300, 650));
-        frame.setPreferredSize(new Dimension(1200, 650));
+        frame.setMinimumSize(new Dimension(300, 725));
+        frame.setPreferredSize(new Dimension(1200, 725));
 
         frame.getContentPane().add(menu, BorderLayout.NORTH);
         control.add(ctrlButtons, BorderLayout.NORTH);
