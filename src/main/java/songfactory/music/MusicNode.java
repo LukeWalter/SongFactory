@@ -356,7 +356,18 @@ public class MusicNode {
 
         if (this.images == null) {
             this.images = new LinkedList<>();
-            images.add(null);
+            this.images.add(null);
+
+        } // if
+
+        if (this.images.size() != this.size()) {
+
+            this.images = new LinkedList<>();
+
+            for (int i = 0; i < this.size(); i++) {
+                images.add(null);
+
+            } // for
 
         } // if
 
@@ -472,6 +483,12 @@ public class MusicNode {
      * @return number of notes in chord
      */
     public int size() {
+
+        System.out.println("Note size: " + notes.size());
+        System.out.println("Accidental size: " + accidentals.size());
+        System.out.println("Octave size: " + octaves.size());
+        System.out.println("Image size: " + images.size());
+
         return notes.size();
 
     } // size

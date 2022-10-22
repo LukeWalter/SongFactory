@@ -722,7 +722,7 @@ public class MusicView extends JComponent {
                 double newLength = newNode.getLength();
 
                 // Remove old node
-                seq.remove(i);
+                MusicNode removed = seq.remove(i);
 
                 // If new node is shorter than existing node
                 if (oldLength > newLength) {
@@ -748,7 +748,16 @@ public class MusicView extends JComponent {
 
                     } // while
 
-                } // if
+                // If new node length is equal to old node length
+                } else {
+
+                    // Add to chord
+                    removed.add(newNode);
+                    seq.add(i, removed);
+                    added = true;
+                    break;
+
+                } // else
 
                 // Add new node
                 seq.add(i, newNode);
