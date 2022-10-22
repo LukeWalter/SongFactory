@@ -92,8 +92,8 @@ public class MusicNode {
      *
      * @return note name
      */
-    public Note getNote() {
-        return notes.get(0);
+    public Note getNote(int index) {
+        return notes.get(index);
 
     } // getNote
 
@@ -102,8 +102,8 @@ public class MusicNode {
      *
      * @param note new note name
      */
-    public void setNote(Note note) {
-        this.notes.set(0, note);
+    public void setNote(int index, Note note) {
+        this.notes.set(index, note);
 
     } // setNote
 
@@ -154,8 +154,8 @@ public class MusicNode {
      *
      * @return accidental
      */
-    public Accidental getAccidental() {
-        return accidentals.get(0);
+    public Accidental getAccidental(int index) {
+        return accidentals.get(index);
 
     } // getAccidental
 
@@ -164,8 +164,8 @@ public class MusicNode {
      *
      * @param accidental accidental to be stored
      */
-    public void setAccidental(Accidental accidental) {
-        this.accidentals.set(0, accidental);
+    public void setAccidental(int index, Accidental accidental) {
+        this.accidentals.set(index, accidental);
         updateImage();
 
     } // setAccidental
@@ -223,13 +223,19 @@ public class MusicNode {
      *
      * @return octave
      */
-    public int getOctave() {
-        return octaves.get(0);
+    public int getOctave(int index) {
+        return octaves.get(index);
 
     } // getOctave
 
-    public void setOctave(int octave) {
-        this.octaves.set(0, octave);
+    /**
+     * Sets octave of note
+     *
+     * @param index which note to set octave
+     * @param octave octave to set note to
+     */
+    public void setOctave(int index, int octave) {
+        this.octaves.set(index, octave);
 
     } // setOctave
 
@@ -254,8 +260,8 @@ public class MusicNode {
      *
      * @return image
      */
-    public JMusicNode getImage() {
-        return images.get(0);
+    public JMusicNode getImage(int index) {
+        return images.get(index);
 
     } // getImage
 

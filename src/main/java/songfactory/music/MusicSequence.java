@@ -82,7 +82,7 @@ public class MusicSequence extends LinkedList<MusicNode> {
         if (this.size() == 0) return true;
 
         for (MusicNode n : this) {
-            if (n.getNote() != Note.REST) return false;
+            if (n.getNote(0) != Note.REST) return false;
 
         } // for
 

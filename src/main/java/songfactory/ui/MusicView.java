@@ -104,7 +104,7 @@ public class MusicView extends JComponent {
                     for (MusicNode n : mNodes) {
 
                         // Check if image coordinates are inside a note
-                        JMusicNode image = n.getImage();
+                        JMusicNode image = n.getImage(0);
                         if (image.containsPoint(mousePosition)) {
 
                             // Replace selected note with a rest of equal size
@@ -114,7 +114,7 @@ public class MusicView extends JComponent {
 
                             // Send new node information to the application
                             app.setSelectLength(n.getLength());
-                            app.setSelectTypeStatus((n.getNote() == Note.REST) ? 1 : 0);
+                            app.setSelectTypeStatus((n.getNote(0) == Note.REST) ? 1 : 0);
 
                             // Select new node
                             image.setLocation(mousePosition);
@@ -420,16 +420,16 @@ public class MusicView extends JComponent {
             for (MusicNode node : measure.getNodes()) {
 
                 // Get each node image in the measure list, draw them with correct spacing
-                JMusicNode i = node.getImage();
+                JMusicNode i = node.getImage(0);
 
-                if (node.getNote() == Note.REST) {
+                if (node.getNote(0) == Note.REST) {
                     i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
 
                 } else {
 
                     i.setLocation(new Point(
                             nodeOffset + nodeSpacing * numNodes,
-                            locationTable.get(new Pair(node.getNote(), node.getOctave()))
+                            locationTable.get(new Pair(node.getNote(0), node.getOctave(0)))
                     ));
 
                     // Draw ledger lines
@@ -567,7 +567,7 @@ public class MusicView extends JComponent {
         // Search measure list for a node in the correct x position
         for (MusicNode node : MusicSequence.getAsSequence(measures)) {
 
-            JMusicNode image = node.getImage();
+            JMusicNode image = node.getImage(0);
             if (image.containsX(currX)) {
                 snapX = image.getX();
                 break;
@@ -655,15 +655,15 @@ public class MusicView extends JComponent {
             JAccidental acc = note.getAccidental();
             Pair<Note, Integer> pitch = staff.pitchTable.get(ny);
             newNode = new MusicNode(pitch.first, app.getSelectLength(), pitch.second);
-            if (acc != null) newNode.setAccidental(acc.getAccidental());
-            JNote image = (JNote) newNode.getImage();
+            if (acc != null) newNode.setAccidental(0, acc.getAccidental());
+            JNote image = (JNote) newNode.getImage(0);
             image.setLocation(new Point(n.getX(), n.getY()));
             image.setAccidental(acc);
 
         // Create new rest based on position and length
         } else if (n instanceof JRest && inXRange) {
             newNode = new MusicNode(Note.REST, app.getSelectLength());
-            newNode.getImage().setLocation(new Point(n.getX(), staff.line3));
+            newNode.getImage(0).setLocation(new Point(n.getX(), staff.line3));
 
         // Add accidental to an existing note in the measure list based on position
         } else if (n instanceof JAccidental && inXRange) {
@@ -672,13 +672,13 @@ public class MusicView extends JComponent {
 
             for (int i = 0; i < seq.size(); i++) {
 
-                JMusicNode oldNode = seq.get(i).getImage();
+                JMusicNode oldNode = seq.get(i).getImage(0);
 
                 if (oldNode instanceof JNote && nx == oldNode.getX()) {
                     JNote note = (JNote) oldNode;
                     JAccidental accidental = (JAccidental) n;
                     note.setAccidental(accidental);
-                    note.getNodeRef().setAccidental(accidental.getAccidental());
+                    note.getNodeRef().setAccidental(0, accidental.getAccidental());
 
                 } // if
 
@@ -689,8 +689,8 @@ public class MusicView extends JComponent {
         if (newNode == null) return;
 
         // Update the application status bar
-        String acc = (newNode.getAccidental() == null) ? "" : "" + newNode.getAccidental();
-        String status = (newNode.getNote() == Note.REST) ? "Rest" : "" + newNode.getNote() + acc + newNode.getOctave();
+        String acc = (newNode.getAccidental(0) == null) ? "" : "" + newNode.getAccidental(0);
+        String status = (newNode.getNote(0) == Note.REST) ? "Rest" : "" + newNode.getNote(0) + acc + newNode.getOctave(0);
         app.setStatusText(status);
 
         // Convert measure list to music sequence for editing
@@ -702,7 +702,7 @@ public class MusicView extends JComponent {
             MusicNode oldNode = seq.get(i);
 
             // If new node is snapped to an existing node
-            if (nx == oldNode.getImage().getX()) {
+            if (nx == oldNode.getImage(0).getX()) {
 
                 double oldLength = oldNode.getLength();
                 double newLength = newNode.getLength();
@@ -727,7 +727,7 @@ public class MusicView extends JComponent {
                     while (remaining > 0) {
 
                         MusicNode curr = seq.get(i + j);
-                        curr.setNote(Note.REST);
+                        curr.setNote(0, Note.REST);
 
                         remaining -= curr.getLength();
                         j++;
@@ -742,7 +742,7 @@ public class MusicView extends JComponent {
                 break;
 
             // Add without removing if node is between two nodes or at the start of the staff
-            } else if (nx < oldNode.getImage().getX()) {
+            } else if (nx < oldNode.getImage(0).getX()) {
                 seq.add(i, newNode);
                 added = true;
                 break;

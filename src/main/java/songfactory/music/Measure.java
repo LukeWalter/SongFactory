@@ -177,7 +177,7 @@ public class Measure {
 
         for (int i = 1; i < this.size(); i++) {
 
-            if (nodes.get(i).getNote() != nodes.get(i - 1).getNote()) {
+            if (nodes.get(i).getNote(0) != nodes.get(i - 1).getNote(0)) {
                 startIndexes.put(i, i);
 
             } // if
@@ -195,12 +195,12 @@ public class Measure {
             curr = nodes.get(i);
 
             // If current node is in a different group of nodes
-            if (curr.getNote() != start.getNote()) {
+            if (curr.getNote(0) != start.getNote(0)) {
                 // Set it as the new starting point
                 sIndex = i;
 
             // If current node is part of a contiguous set of rests
-            } else if (start.getNote() == Note.REST) {
+            } else if (start.getNote(0) == Note.REST) {
                 // Add its value to the starting point and remove it
                 start.setLength(start.getLength() + curr.getLength());
                 nodes.remove(curr);
