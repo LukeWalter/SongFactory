@@ -419,50 +419,55 @@ public class MusicView extends JComponent {
 
             for (MusicNode node : measure.getNodes()) {
 
-                // Get each node image in the measure list, draw them with correct spacing
-                JMusicNode i = node.getImage(0);
+                for (int i = 0; i < node.size(); i++) {
 
-                if (node.getNote(0) == Note.REST) {
-                    i.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
+                    // Get each node image in the measure list, draw them with correct spacing
+                    JMusicNode image = node.getImage(i);
 
-                } else {
+                    if (node.getNote(i) == Note.REST) {
+                        image.setLocation(new Point(nodeOffset + nodeSpacing * numNodes, staff.line3));
 
-                    i.setLocation(new Point(
-                            nodeOffset + nodeSpacing * numNodes,
-                            locationTable.get(new Pair(node.getNote(0), node.getOctave(0)))
-                    ));
+                    } else {
 
-                    // Draw ledger lines
+                        image.setLocation(new Point(
+                                nodeOffset + nodeSpacing * numNodes,
+                                locationTable.get(new Pair(node.getNote(i), node.getOctave(i)))
+                        ));
 
-                    int iy = i.getY();
+                        // Draw ledger lines
 
-                    if (iy > staff.lspace3) {
-                        int ix = i.getX();
-                        g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+                        int iy = image.getY();
+
+                        if (iy > staff.lspace3) {
+                            int ix = image.getX();
+                            g2d.drawLine(ix - 8, staff.lline2, ix + 8, staff.lline2);
+
+                        } // if
+
+                        if (iy > staff.lspace2) {
+                            int ix = image.getX();
+                            g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+
+                        } // if
+
+                        if (iy < staff.lspace4) {
+                            int ix = image.getX();
+                            g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
+
+                        } // if
+
+                        if (iy < staff.lspace5) {
+                            int ix = image.getX();
+                            g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
+
+                        } // if
 
                     } // if
 
-                    if (iy > staff.lspace2) {
-                        int ix = i.getX();
-                        g2d.drawLine(ix - 8, staff.lline1, ix + 8, staff.lline1);
+                    image.paintNode(g);
 
-                    } // if
+                } // for
 
-                    if (iy < staff.lspace4) {
-                        int ix = i.getX();
-                        g2d.drawLine(ix - 8, staff.lline3, ix + 8, staff.lline3);
-
-                    } // if
-
-                    if (iy < staff.lspace5) {
-                        int ix = i.getX();
-                        g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
-
-                    } // if
-
-                } // if
-
-                i.paintNode(g);
 
                 numNodes++;
 
@@ -672,15 +677,24 @@ public class MusicView extends JComponent {
 
             for (int i = 0; i < seq.size(); i++) {
 
-                JMusicNode oldNode = seq.get(i).getImage(0);
+                MusicNode oldNode = seq.get(i);
 
-                if (oldNode instanceof JNote && nx == oldNode.getX()) {
-                    JNote note = (JNote) oldNode;
-                    JAccidental accidental = (JAccidental) n;
-                    note.setAccidental(accidental);
-                    note.getNodeRef().setAccidental(0, accidental.getAccidental());
+                for (int j = 0; j < oldNode.size(); j++) {
 
-                } // if
+                    JMusicNode o = oldNode.getImage(j);
+
+                    if (o instanceof JNote && nx == o.getX() && ny == o.getY()) {
+
+                        JNote note = (JNote) o;
+                        JAccidental accidental = (JAccidental) n;
+                        note.setAccidental(accidental);
+                        note.getNodeRef().setAccidental(j, accidental.getAccidental());
+
+                        break;
+
+                    } // if
+
+                } // for
 
             } // for
 
