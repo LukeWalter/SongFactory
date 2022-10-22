@@ -366,21 +366,25 @@ public class MusicNode {
 
         } // if
 
-        if (notes.get(0) == Note.REST) {
-            // Set rest length
-            images.set(0, JMusicNodeFactory.createRest(length));
-            images.get(0).setNodeRef(this);
+        for (int i = 0; i < this.size(); i++) {
 
-        } else {
+            if (notes.get(i) == Note.REST) {
+                // Set rest length
+                images.set(i, JMusicNodeFactory.createRest(length));
+                images.get(i).setNodeRef(this);
 
-            // Set note length and accidental
-            JNote noteImage = JMusicNodeFactory.createNote(length);
-            noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidentals.get(0)));
+            } else {
 
-            images.set(0, noteImage);
-            images.get(0).setNodeRef(this);
+                // Set note length and accidental
+                JNote noteImage = JMusicNodeFactory.createNote(length);
+                noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidentals.get(i)));
 
-        } // if
+                images.set(i, noteImage);
+                images.get(i).setNodeRef(this);
+
+            } // if
+
+        } // for
 
     } // updateImage
 
@@ -479,7 +483,7 @@ public class MusicNode {
      */
     @Override
     public String toString() {
-        return "" + notes.get(0) + " " + length + " " + octaves.get(0) + " " + accidentals.get(0);
+        return "" + notes + " " + length + " " + octaves + " " + accidentals;
 
     } // toString
 
