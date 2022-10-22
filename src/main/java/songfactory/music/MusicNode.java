@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class MusicNode {
 
-    private Note note; // Note name
-    private Accidental accidental; // Accidental stored by note
+    private List<Note> notes; // Note name
+    private List<Accidental> accidentals; // Accidental stored by note
 
-    private int octave; // Octave of note
+    private List<Integer> octaves; // Octave of note
     private double length; // Length of note
 
-    private JMusicNode image; // Visual representation of note
+    private List<JMusicNode> images; // Visual representation of note
 
     /**
      * MusicNode constructor.
@@ -52,10 +52,19 @@ public class MusicNode {
      */
     public MusicNode(Note note, double length, int octave, Accidental accidental) {
 
-        this.note = note;
+        this.notes = new LinkedList<>();
+        this.notes.add(note);
+
         this.length = length;
-        this.octave = octave;
-        this.accidental = accidental;
+
+        this.octaves = new LinkedList<>();
+        this.octaves.add(octave);
+
+        this.accidentals = new LinkedList<>();
+        this.accidentals.add(accidental);
+
+        this.images = new LinkedList<>();
+        images.add(null);
         this.updateImage();
 
     } // Constructor
@@ -68,10 +77,10 @@ public class MusicNode {
     public MusicNode(MusicNode other) {
 
         if (other != null) {
-            this.note = other.note;
+            this.notes = other.notes;
             this.length = other.length;
-            this.octave = other.octave;
-            this.accidental = other.accidental;
+            this.octaves = other.octaves;
+            this.accidentals = other.accidentals;
             this.updateImage();
 
         } // if
@@ -84,7 +93,7 @@ public class MusicNode {
      * @return note name
      */
     public Note getNote() {
-        return note;
+        return notes.get(0);
 
     } // getNote
 
@@ -94,51 +103,51 @@ public class MusicNode {
      * @param note new note name
      */
     public void setNote(Note note) {
-        this.note = note;
+        this.notes.set(0, note);
 
     } // setNote
 
-    /**
-     * Increases the pitch of a note by one whole step.
-     *
-     * @throws RestException if called on a rest
-     */
-    public void incrementNote() throws RestException {
-
-        if (note == Note.REST) {
-            throw new RestException("Rests cannot be incremented.");
-
-        } else if (note == Note.B) {
-            note = Note.C;
-            octave += 1;
-
-        } else {
-            note = Note.values()[note.ordinal() + 1];
-
-        } // if
-
-    } // incrementNote
-
-    /**
-     * Decreases the pitch of a note by one whole step.
-     *
-     * @throws RestException if called on a rest
-     */
-    public void decrementNote() throws RestException {
-
-        if (note == Note.REST) {
-            throw new RestException("Rests cannot be decremented.");
-
-        } else if (note == Note.C) {
-            note = Note.B;
-            octave -= 1;
-
-        } else {
-            note = Note.values()[note.ordinal() - 1];
-
-        } // if
-
-    } // decrementNote
+//    /**
+//     * Increases the pitch of a note by one whole step.
+//     *
+//     * @throws RestException if called on a rest
+//     */
+//    public void incrementNote() throws RestException {
+//
+//        if (note == Note.REST) {
+//            throw new RestException("Rests cannot be incremented.");
+//
+//        } else if (note == Note.B) {
+//            note = Note.C;
+//            octave += 1;
+//
+//        } else {
+//            note = Note.values()[note.ordinal() + 1];
+//
+//        } // if
+//
+//    } // incrementNote
+//
+//    /**
+//     * Decreases the pitch of a note by one whole step.
+//     *
+//     * @throws RestException if called on a rest
+//     */
+//    public void decrementNote() throws RestException {
+//
+//        if (note == Note.REST) {
+//            throw new RestException("Rests cannot be decremented.");
+//
+//        } else if (note == Note.C) {
+//            note = Note.B;
+//            octave -= 1;
+//
+//        } else {
+//            note = Note.values()[note.ordinal() - 1];
+//
+//        } // if
+//
+//    } // decrementNote
 
     /**
      * Returns accidental stored by note.
@@ -146,7 +155,7 @@ public class MusicNode {
      * @return accidental
      */
     public Accidental getAccidental() {
-        return accidental;
+        return accidentals.get(0);
 
     } // getAccidental
 
@@ -156,58 +165,58 @@ public class MusicNode {
      * @param accidental accidental to be stored
      */
     public void setAccidental(Accidental accidental) {
-        this.accidental = accidental;
+        this.accidentals.set(0, accidental);
         updateImage();
 
     } // setAccidental
 
-    /**
-     * Loops through different types of sharps that
-     * can be stored by a note.
-     *
-     * @throws RestException if called on a rest
-     */
-    public void incrementSharp() throws RestException {
-
-        if (note == Note.REST) {
-            throw new RestException("Rests cannot have accidentals.");
-
-        } else if (accidental == null) {
-            accidental = Accidental.SHARP;
-
-        } else if (accidental == Accidental.DOUBLE_SHARP) {
-            accidental = null;
-
-        } else {
-            accidental = Accidental.values()[accidental.ordinal() + 1];
-
-        } // if
-
-    } // incrementAccidental
-
-    /**
-     * Loops through different types of flats that
-     * can be stored by a note.
-     *
-     * @throws RestException if called on a rest
-     */
-    public void incrementFlat() throws RestException {
-
-        if (note == Note.REST) {
-            throw new RestException("Rests cannot have accidentals.");
-
-        } else if (accidental == null) {
-            accidental = Accidental.FLAT;
-
-        } else if (accidental == Accidental.DOUBLE_FLAT) {
-            accidental = null;
-
-        } else {
-            accidental = Accidental.values()[accidental.ordinal() - 1];
-
-        } // if
-
-    } // incrementFlat
+//    /**
+//     * Loops through different types of sharps that
+//     * can be stored by a note.
+//     *
+//     * @throws RestException if called on a rest
+//     */
+//    public void incrementSharp() throws RestException {
+//
+//        if (note == Note.REST) {
+//            throw new RestException("Rests cannot have accidentals.");
+//
+//        } else if (accidental == null) {
+//            accidental = Accidental.SHARP;
+//
+//        } else if (accidental == Accidental.DOUBLE_SHARP) {
+//            accidental = null;
+//
+//        } else {
+//            accidental = Accidental.values()[accidental.ordinal() + 1];
+//
+//        } // if
+//
+//    } // incrementAccidental
+//
+//    /**
+//     * Loops through different types of flats that
+//     * can be stored by a note.
+//     *
+//     * @throws RestException if called on a rest
+//     */
+//    public void incrementFlat() throws RestException {
+//
+//        if (note == Note.REST) {
+//            throw new RestException("Rests cannot have accidentals.");
+//
+//        } else if (accidental == null) {
+//            accidental = Accidental.FLAT;
+//
+//        } else if (accidental == Accidental.DOUBLE_FLAT) {
+//            accidental = null;
+//
+//        } else {
+//            accidental = Accidental.values()[accidental.ordinal() - 1];
+//
+//        } // if
+//
+//    } // incrementFlat
 
     /**
      * Returns octave of note.
@@ -215,12 +224,12 @@ public class MusicNode {
      * @return octave
      */
     public int getOctave() {
-        return octave;
+        return octaves.get(0);
 
     } // getOctave
 
     public void setOctave(int octave) {
-        this.octave = octave;
+        this.octaves.set(0, octave);
 
     } // setOctave
 
@@ -246,7 +255,7 @@ public class MusicNode {
      * @return image
      */
     public JMusicNode getImage() {
-        return image;
+        return images.get(0);
 
     } // getImage
 
@@ -257,25 +266,31 @@ public class MusicNode {
      */
     private void updateImage() {
 
+        if (this.images == null) {
+            this.images = new LinkedList<>();
+            images.add(null);
+
+        } // if
+
         // Abort if the node type does not exist
         if (!Conversion.noteTable.containsKey(length)) {
             return;
 
         } // if
 
-        if (note == Note.REST) {
+        if (notes.get(0) == Note.REST) {
             // Set rest length
-            image = JMusicNodeFactory.createRest(length);
-            image.setNodeRef(this);
+            images.set(0, JMusicNodeFactory.createRest(length));
+            images.get(0).setNodeRef(this);
 
         } else {
 
             // Set note length and accidental
             JNote noteImage = JMusicNodeFactory.createNote(length);
-            noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidental));
+            noteImage.setAccidental(JMusicNodeFactory.createAccidental(accidentals.get(0)));
 
-            image = noteImage;
-            image.setNodeRef(this);
+            images.set(0, noteImage);
+            images.get(0).setNodeRef(this);
 
         } // if
 
@@ -366,7 +381,7 @@ public class MusicNode {
      */
     @Override
     public String toString() {
-        return "" + note + " " + length + " " + octave + " " + accidental;
+        return "" + notes.get(0) + " " + length + " " + octaves.get(0) + " " + accidentals.get(0);
 
     } // toString
 
