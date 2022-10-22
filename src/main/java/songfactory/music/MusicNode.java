@@ -88,6 +88,88 @@ public class MusicNode {
     } // Constructor
 
     /**
+     * Creates a new node based on one of
+     * the notes in the chord.
+     *
+     * @param index which note to extract
+     * @return the extracted node
+     */
+    public MusicNode extract(int index) {
+        Note note = this.getNote(index);
+        int octave = this.getOctave(index);
+        Accidental accidental = this.getAccidental(index);
+        return new MusicNode(note, length, octave, accidental);
+
+    } // get
+
+    /**
+     * Adds a note to the chord.
+     *
+     * @param newNode note to be added
+     */
+    public void add(MusicNode newNode) {
+
+        if (newNode.getLength() != length) {
+            return;
+
+        } else if (newNode.getNote(0) == Note.REST) {
+
+            notes.clear();
+            notes.add(Note.REST);
+
+            octaves.clear();
+            octaves.add(4);
+
+            accidentals.clear();
+            accidentals.add(null);
+
+            images.clear();
+            images.add(null);
+
+            updateImage();
+
+        } else {
+
+            notes.add(newNode.getNote(0));
+            octaves.add(newNode.getOctave(0));
+            accidentals.add(newNode.getAccidental(0));
+            images.add(newNode.getImage(0));
+
+            updateImage();
+
+        } // if
+
+    } // add
+
+    /**
+     * Removes a note from the chord. First
+     * element is set to a rest if all notes
+     * are removed.
+     *
+     * @param index note to be removed from chord
+     */
+    public void remove(int index) {
+
+        if (notes.size() == 0) {
+            throw new RuntimeException();
+
+        } else if (notes.size() == 1) {
+            this.add(new MusicNode(Note.REST, length));
+
+        } else {
+
+            notes.remove(index);
+            octaves.remove(index);
+            accidentals.remove(index);
+            images.remove(index);
+
+            updateImage();
+
+        } // if
+
+    } // remove
+
+    /**
      * Returns note name.
      *
      * @return note name
