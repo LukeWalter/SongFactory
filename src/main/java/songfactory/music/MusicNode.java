@@ -463,6 +463,16 @@ public class MusicNode {
     } // extractNode
 
     /**
+     * Returns number of notes in a chord.
+     *
+     * @return number of notes in chord
+     */
+    public int size() {
+        return notes.size();
+
+    } // size
+
+    /**
      * toString() implementation.
      *
      * @return String representation of MusicNode.
