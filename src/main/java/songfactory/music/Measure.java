@@ -171,18 +171,35 @@ public class Measure {
      */
     public void combine() {
 
-        // Store first instance of any contiguous section of nodes
-        HashMap<Integer, Integer> startIndexes = new HashMap<>();
-        startIndexes.put(0, 0);
-
-        for (int i = 1; i < this.size(); i++) {
-
-            if (nodes.get(i).getNote(0) != nodes.get(i - 1).getNote(0)) {
-                startIndexes.put(i, i);
-
-            } // if
-
-        } // for
+//        // Store first instance of any contiguous section of nodes
+//        HashMap<Integer, Integer> startIndexes = new HashMap<>();
+//        startIndexes.put(0, 0);
+//
+//        for (int i = 1; i < this.size(); i++) {
+//
+//            MusicNode curr = nodes.get(i);
+//            MusicNode prev = nodes.get(i - 1);
+//
+//            if (curr.size() != prev.size()) {
+//                startIndexes.put(i, i);
+//
+//            } else {
+//
+//                for (int j = 0; j < curr.size(); j++) {
+//
+//                    if (curr.getNote(0) != prev.getNote(0)) {
+//                        startIndexes.put(i, i);
+//                        break;
+//
+//                    } // if
+//
+//                } // for
+//
+//            } // if
+//
+//
+//
+//        } // for
 
         int sIndex = 0;
 
