@@ -102,12 +102,13 @@ public class MusicView extends JComponent {
             public void mousePressed(MouseEvent e) {
 
                 mode = app.getMode();
+                Point mousePosition = new Point(e.getX(), e.getY());
+
                 switch (mode) {
 
                     case SELECT:
 
                         placing = true;
-                        Point mousePosition = new Point(e.getX(), e.getY());
 
                         for (Measure m : measures) {
 
@@ -208,6 +209,12 @@ public class MusicView extends JComponent {
                         break;
 
                     case DRAW:
+
+                        drawing = true;
+                        stroke = new ArrayList<>();
+                        stroke.add(mousePosition);
+                        updateComponent();
+
                         break;
 
                     default: break;
@@ -236,6 +243,14 @@ public class MusicView extends JComponent {
                         break;
 
                     case DRAW:
+
+                        if (drawing) {
+                            stroke = null;
+                            drawing = false;
+                            updateComponent();
+
+                        } // if
+
                         break;
 
                     default: break;
@@ -250,13 +265,14 @@ public class MusicView extends JComponent {
 
             public void mouseDragged(MouseEvent e) {
 
+                Point mousePosition = new Point(e.getX(), e.getY());
+
                 switch (mode) {
 
                     case SELECT:
 
                         // Drag node with mouse and snap in valid positions
                         if (placing) {
-                            Point mousePosition = new Point(e.getX(), e.getY());
                             previewNode.setLocation(mousePosition);
 
                             snapToLine(previewNode);
@@ -283,6 +299,15 @@ public class MusicView extends JComponent {
                         break;
 
                     case DRAW:
+
+                        if (drawing) {
+                            stroke.add(mousePosition);
+//                            System.out.println(stroke);
+                            revalidate();
+                            repaint();
+
+                        } // if
+
                         break;
 
                     default: break;
@@ -413,7 +438,7 @@ public class MusicView extends JComponent {
      */
     @Override
     protected void paintComponent(Graphics g) {
-
+        System.out.println("Paint component");
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
@@ -596,6 +621,21 @@ public class MusicView extends JComponent {
                 g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
 
             } // if
+
+        } // if
+
+        if (drawing && stroke != null && stroke.size() > 1) {
+
+            g2d.setStroke(new BasicStroke(3f));
+
+            for (int i = 0; i < stroke.size() - 1; i++) {
+
+                Point2D a = stroke.get(i);
+                Point2D b = stroke.get(i + 1);
+
+                g2d.drawLine((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)b.getY());
+
+            } // for
 
         } // if
 
