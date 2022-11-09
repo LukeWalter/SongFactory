@@ -643,7 +643,7 @@ public class MusicView extends JComponent {
             if (stroke.size() > 1) {
 
                 g2d.setStroke(new BasicStroke(3f));
-                g2d.setColor(new Color(0, 0, 0, alpha));
+                g2d.setColor(new Color(0, 0, 255, alpha));
 
                 for (int i = 0; i < stroke.size() - 1; i++) {
 
