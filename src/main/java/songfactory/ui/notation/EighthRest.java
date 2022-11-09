@@ -11,7 +11,7 @@ public class EighthRest extends JRest {
      * Eighth rest constructor.
      */
     public EighthRest() {
-        super(EIGHTH_REST, 4, 10, new Dimension(20, 20));
+        super(EIGHTH_REST, 0.125, 4, 10, new Dimension(20, 20));
 
     } // Constructor
 

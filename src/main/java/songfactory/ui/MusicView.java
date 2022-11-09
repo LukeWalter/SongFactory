@@ -3,6 +3,7 @@ package songfactory.ui;
 import songfactory.Mode;
 import songfactory.Pair;
 import songfactory.music.*;
+import songfactory.recognition.*;
 import songfactory.ui.notation.*;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class MusicView extends JComponent {
     private Mode mode;
 
     private ArrayList<Point2D> stroke; // Pen stroke
+    private int alpha; // Opacity of pen stroke
 
     /**
      * Represents the sizing and positional
@@ -210,7 +212,9 @@ public class MusicView extends JComponent {
 
                     case DRAW:
 
+                        // Initialize new stroke
                         drawing = true;
+                        alpha = 255;
                         stroke = new ArrayList<>();
                         stroke.add(mousePosition);
                         updateComponent();
@@ -220,8 +224,6 @@ public class MusicView extends JComponent {
                     default: break;
 
                 } // switch
-
-
 
             } // mousePressed
 
@@ -244,8 +246,20 @@ public class MusicView extends JComponent {
 
                     case DRAW:
 
+                        // Recognize shape and process into measure list
                         if (drawing) {
-                            stroke = null;
+
+                            JMusicNode newNode = recognizeShape(stroke);
+
+                            if (newNode != null) {
+                                newNode.setLocation((Point)stroke.get(0));
+                                snapToLine(newNode);
+                                snapToNode(newNode);
+                                process(newNode);
+                                stroke = null;
+
+                            } // if
+
                             drawing = false;
                             updateComponent();
 
@@ -300,9 +314,9 @@ public class MusicView extends JComponent {
 
                     case DRAW:
 
+                        // Add new mouse position to drawn shape
                         if (drawing) {
                             stroke.add(mousePosition);
-//                            System.out.println(stroke);
                             revalidate();
                             repaint();
 
@@ -438,7 +452,7 @@ public class MusicView extends JComponent {
      */
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("Paint component");
+
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
@@ -624,18 +638,32 @@ public class MusicView extends JComponent {
 
         } // if
 
-        if (drawing && stroke != null && stroke.size() > 1) {
+        // Draw pen shape
+        if (stroke != null) {
 
-            g2d.setStroke(new BasicStroke(3f));
+            if (stroke.size() > 1) {
 
-            for (int i = 0; i < stroke.size() - 1; i++) {
+                g2d.setStroke(new BasicStroke(3f));
+                g2d.setColor(new Color(0, 0, 0, alpha));
 
-                Point2D a = stroke.get(i);
-                Point2D b = stroke.get(i + 1);
+                for (int i = 0; i < stroke.size() - 1; i++) {
 
-                g2d.drawLine((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)b.getY());
+                    Point2D a = stroke.get(i);
+                    Point2D b = stroke.get(i + 1);
 
-            } // for
+                    g2d.drawLine((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)b.getY());
+
+                } // for
+
+            } // if
+
+            if (!drawing) {
+                alpha--;
+                if (alpha <= 0) stroke = null;
+                revalidate();
+                repaint();
+
+            } // if
 
         } // if
 
@@ -872,5 +900,47 @@ public class MusicView extends JComponent {
         return measures.size();
 
     } // getSize
+
+    /**
+     * Converts a drawn image to a usable JMusicNode
+     * that can be placed on the staff.
+     *
+     * @param shape shape to be recognized
+     * @return JMusicNode recognized by DollarRecognizer
+     */
+    public JMusicNode recognizeShape(ArrayList<Point2D> shape) {
+
+        // Recognize shape
+        DollarRecognizer dollar = new DollarRecognizer();
+        String name = dollar.recognize(shape).getName();
+
+        // Convert result to JMusicNode
+        if (!Conversion.recognitionTable.containsKey(name)) return null;
+        JMusicNode recognized = Conversion.recognitionTable.get(name).make();
+
+        // Alter UI to match node type and length
+        if (recognized instanceof JNote) {
+            app.setSelectTypeStatus(0);
+
+            JNote newNote = (JNote) recognized;
+            app.setSelectLength(newNote.getLength());
+
+        } else if (recognized instanceof JRest) {
+            app.setSelectTypeStatus(1);
+
+            JRest newNote = (JRest) recognized;
+            app.setSelectLength(newNote.getLength());
+
+        } else if (recognized instanceof Flat) {
+            app.setSelectTypeStatus(2);
+
+        } else if (recognized instanceof Sharp) {
+            app.setSelectTypeStatus(3);
+
+        } // if
+
+        return recognized;
+
+    } // recognizeShape
 
 } // MusicView

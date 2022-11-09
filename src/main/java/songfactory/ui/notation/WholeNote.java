@@ -11,7 +11,7 @@ public class WholeNote extends JNote {
      * Whole note constructor.
      */
     public WholeNote() {
-        super(WHOLE_NOTE, 10, 6, new Dimension(40, 20));
+        super(WHOLE_NOTE, 1, 10, 6, new Dimension(40, 20));
 
     } // Constructor
 

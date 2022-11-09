@@ -11,7 +11,7 @@ public class QuarterRest extends JRest {
      * Quarter rest constructor.
      */
     public QuarterRest() {
-        super(QUARTER_REST, 4, 17, new Dimension(20, 60));
+        super(QUARTER_REST, 0.25, 4, 17, new Dimension(20, 60));
 
     } // Constructor
 
