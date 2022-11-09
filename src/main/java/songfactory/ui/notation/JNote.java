@@ -7,7 +7,8 @@ import java.awt.*;
  */
 public class JNote extends JMusicNode {
 
-    public JAccidental accidental; // Accidental for note
+    private JAccidental accidental; // Accidental for note
+    private double length; // Length of associated MusicNode
 
     /**
      * JNote constructor.
@@ -17,8 +18,9 @@ public class JNote extends JMusicNode {
      * @param yOffset distance from top side to true middle of image
      * @param size bounding box for image
      */
-    public JNote(Image image, int xOffset, int yOffset, Dimension size) {
+    public JNote(Image image, double length, int xOffset, int yOffset, Dimension size) {
         super(image, xOffset, yOffset, size);
+        this.length = length;
 
     } // JNote
 
@@ -91,6 +93,16 @@ public class JNote extends JMusicNode {
         } // if
 
     } // setAccidentalLocation
+
+    /**
+     * Returns the length of the associated MusicNode.
+     *
+     * @return length
+     */
+    public double getLength() {
+        return length;
+
+    } // getLength
 
     /**
      * toString() implementation

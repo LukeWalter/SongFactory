@@ -11,7 +11,7 @@ public class QuarterNote extends JNote {
      * Quarter note constructor.
      */
     public QuarterNote() {
-        super(QUARTER_NOTE, 7, 35, new Dimension(20, 12));
+        super(QUARTER_NOTE, 0.25, 7, 35, new Dimension(20, 12));
 
     } // Constructor
 

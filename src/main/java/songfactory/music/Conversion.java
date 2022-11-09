@@ -12,12 +12,15 @@ public class Conversion {
     protected interface INote { JNote make(); } // Functional interface for note constructors
     protected interface IRest { JRest make(); } // Functional interface for rest constructors
     protected interface IAccidental { JAccidental make(); } // Functional interface for accidental constructors
+    public interface INode { JMusicNode make(); } // Functional interface for JMusicNode constructors
 
     private static boolean initialized = false;
 
     public static HashMap<Double, INote> noteTable; // Maps node lengths to note types
     public static HashMap<Double, IRest> restTable; // Maps node lengths to rest types
     public static HashMap<Accidental, IAccidental> accidentalTable; // Maps accidental enums to accidental types
+
+    public static HashMap<String, INode> recognitionTable; // Maps recognizer names to JMusicNode types
 
     /**
      * Initializes and populates the lookup tables.
@@ -44,6 +47,20 @@ public class Conversion {
         accidentalTable.put(Accidental.FLAT, Flat::new);
         accidentalTable.put(Accidental.NATURAL, Natural::new);
         accidentalTable.put(Accidental.SHARP, Sharp::new);
+
+        recognitionTable = new HashMap<>();
+        recognitionTable.put("circle", WholeNote::new);
+        recognitionTable.put("half note", HalfNote::new);
+        recognitionTable.put("quarter note", QuarterNote::new);
+        recognitionTable.put("eighth note", EighthNote::new);
+        recognitionTable.put("sixteenth note", SixteenthNote::new);
+        recognitionTable.put("rectangle", WholeRest::new);
+        recognitionTable.put("half rest", HalfRest::new);
+        recognitionTable.put("right curly brace", QuarterRest::new);
+        recognitionTable.put("eighth rest", EighthRest::new);
+        recognitionTable.put("sixteenth rest", SixteenthRest::new);
+        recognitionTable.put("flat", Flat::new);
+        recognitionTable.put("star", Sharp::new);
 
     } // initialize
 

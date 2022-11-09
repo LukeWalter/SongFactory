@@ -11,7 +11,7 @@ public class HalfNote extends JNote {
      * Half note constructor.
      */
     public HalfNote() {
-        super(HALF_NOTE, 15, 34, new Dimension(20, 12));
+        super(HALF_NOTE, 0.5, 15, 34, new Dimension(20, 12));
 
     } // Constructor
 

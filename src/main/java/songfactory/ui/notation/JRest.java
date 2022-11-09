@@ -7,6 +7,8 @@ import java.awt.*;
  */
 public class JRest extends JMusicNode {
 
+    double length; // Length of associated MusicNode
+
     /**
      * JRest constructor.
      *
@@ -15,10 +17,21 @@ public class JRest extends JMusicNode {
      * @param yOffset distance from top side to true middle of image
      * @param size bounding box for image
      */
-    public JRest(Image image, int xOffset, int yOffset, Dimension size) {
+    public JRest(Image image, double length, int xOffset, int yOffset, Dimension size) {
         super(image, xOffset, yOffset, size);
+        this.length = length;
 
     } // JRest
+
+    /**
+     * Returns the length of the associated MusicNode.
+     *
+     * @return length
+     */
+    public double getLength() {
+        return length;
+
+    } // getLength
 
     /**
      * toString() implementation.

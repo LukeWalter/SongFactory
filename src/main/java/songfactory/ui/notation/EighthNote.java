@@ -11,7 +11,7 @@ public class EighthNote extends JNote {
      * Eighth note constructor.
      */
     public EighthNote() {
-        super(EIGHTH_NOTE, 15, 35, new Dimension(20, 12));
+        super(EIGHTH_NOTE, 0.125, 15, 35, new Dimension(20, 12));
 
     } // EighthNote
 

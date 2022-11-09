@@ -1,5 +1,6 @@
 package songfactory.ui;
 
+import songfactory.Mode;
 import songfactory.music.*;
 import songfactory.ui.notation.JMusicNode;
 
@@ -16,6 +17,8 @@ import javax.swing.border.EmptyBorder;
  */
 public class SwingApp {
 
+    private Mode mode;
+
     private JLabel status; // Editable status text
 
     private int selectType; // Representation of which node type is active (note, rest, flat, sharp)
@@ -30,10 +33,14 @@ public class SwingApp {
     private JRadioButton flat;
     private JRadioButton sharp;
 
+    private ArrayList<MusicView> sheetMusic;
+
     /**
      * Constructs the swing app and displays it on screen.
      */
     public SwingApp() {
+
+        mode = Mode.SELECT;
 
         selectType = 0;
 
@@ -169,7 +176,7 @@ public class SwingApp {
         songTitle.setBorder(new EmptyBorder(50,70,0,0));
         inScrollPane.add(songTitle);
 
-        ArrayList<MusicView> sheetMusic = new ArrayList<>();
+        sheetMusic = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             MusicView mv = new MusicView(this);
             sheetMusic.add(mv);
@@ -196,10 +203,19 @@ public class SwingApp {
 
         // Event listeners
         exit.addActionListener(e -> System.exit(0));
-        select.addActionListener(e -> setStatusText("Select"));
-        pen.addActionListener(e -> setStatusText("Pen"));
         play.addActionListener(e -> setStatusText("Play"));
         stop.addActionListener(e -> setStatusText("Stop"));
+
+        select.addActionListener(e -> {
+            mode = Mode.SELECT;
+            setStatusText("Select");
+
+        });
+
+        pen.addActionListener(e -> {
+            mode = Mode.DRAW;
+            setStatusText("Pen");
+        });
 
         create.addActionListener(e -> {
             setStatusText("New Staff");
@@ -447,5 +463,39 @@ public class SwingApp {
         } // if
 
     } // setDeletableMeasure
+
+    /**
+     * Returns the editing mode that the
+     * application is currently in.
+     *
+     * @return current editing mode for application
+     */
+    public Mode getMode() {
+        return mode;
+
+    } // getMode
+
+    /**
+     * Sets all staffs to a specific measure length.
+     *
+     * @param length measure length to set staffs to
+     */
+    public void updateMeasureLength(int length) {
+
+        for (MusicView mv : sheetMusic) {
+
+            while (mv.getNumMeasures() < length) {
+                mv.addMeasure();
+
+            } // while
+
+            while (mv.getNumMeasures() > length) {
+                mv.removeMeasure();
+
+            } // while
+
+        } // for
+
+    } // updateMeasureLength
 
 } // SwingApp
