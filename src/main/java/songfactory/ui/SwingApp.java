@@ -33,6 +33,8 @@ public class SwingApp {
     private JRadioButton flat;
     private JRadioButton sharp;
 
+    private ArrayList<MusicView> sheetMusic;
+
     /**
      * Constructs the swing app and displays it on screen.
      */
@@ -174,7 +176,7 @@ public class SwingApp {
         songTitle.setBorder(new EmptyBorder(50,70,0,0));
         inScrollPane.add(songTitle);
 
-        ArrayList<MusicView> sheetMusic = new ArrayList<>();
+        sheetMusic = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             MusicView mv = new MusicView(this);
             sheetMusic.add(mv);
@@ -462,9 +464,38 @@ public class SwingApp {
 
     } // setDeletableMeasure
 
+    /**
+     * Returns the editing mode that the
+     * application is currently in.
+     *
+     * @return current editing mode for application
+     */
     public Mode getMode() {
         return mode;
 
     } // getMode
+
+    /**
+     * Sets all staffs to a specific measure length.
+     *
+     * @param length measure length to set staffs to
+     */
+    public void updateMeasureLength(int length) {
+
+        for (MusicView mv : sheetMusic) {
+
+            while (mv.getNumMeasures() < length) {
+                mv.addMeasure();
+
+            } // while
+
+            while (mv.getNumMeasures() > length) {
+                mv.removeMeasure();
+
+            } // while
+
+        } // for
+
+    } // updateMeasureLength
 
 } // SwingApp

@@ -430,7 +430,6 @@ public class MusicView extends JComponent {
      */
     public void updateComponent() {
 
-
         this.dimensions = new Dimension(
                 150 + (MusicSequence.getAsSequence(measures).size() + measures.size()) * 50 - 33,
                 300
@@ -659,7 +658,7 @@ public class MusicView extends JComponent {
 
             if (!drawing) {
                 alpha--;
-                if (alpha <= 0) stroke = null;
+                if (alpha < 1) stroke = null;
                 revalidate();
                 repaint();
 
@@ -758,6 +757,8 @@ public class MusicView extends JComponent {
      * @param n node being inserted into the measure list
      */
     public void process(JMusicNode n) {
+
+        int numMeasures = measures.size(); // Old measure size
 
         // Get position of node image
         int nx = n.getX();
@@ -888,6 +889,12 @@ public class MusicView extends JComponent {
         // Check if delete measure button should be active
         app.setDeletableMeasure(measures.size());
         updateComponent();
+
+        // Keep measure count consistent across MusicViews
+        if (measures.size() - numMeasures != 0) {
+            app.updateMeasureLength(measures.size());
+
+        } // if
 
     } // process
 
