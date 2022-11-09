@@ -1,5 +1,6 @@
 package songfactory.ui;
 
+import songfactory.Mode;
 import songfactory.Pair;
 import songfactory.music.*;
 import songfactory.ui.notation.*;
@@ -8,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +24,9 @@ import java.util.Set;
 public class MusicView extends JComponent {
 
     private SwingApp app; // Reference to overarching Swing application
+    private Mode mode;
+
+    private ArrayList<Point2D> stroke; // Pen stroke
 
     /**
      * Represents the sizing and positional
@@ -42,6 +48,7 @@ public class MusicView extends JComponent {
     private List<Measure> measures; // List of measures stored in staff
     private JMusicNode previewNode; // The node being selected/dragged
     private boolean placing; // Determines if a note is currently being dragged
+    private boolean drawing; // Determines if a shape is being drawn
 
     /**
      * MusicView Constructor.
@@ -94,117 +101,146 @@ public class MusicView extends JComponent {
              */
             public void mousePressed(MouseEvent e) {
 
-                placing = true;
-                Point mousePosition = new Point(e.getX(), e.getY());
+                mode = app.getMode();
+                switch (mode) {
 
-                for (Measure m : measures) {
+                    case SELECT:
 
-                    MusicSequence mNodes = m.getNodes();
+                        placing = true;
+                        Point mousePosition = new Point(e.getX(), e.getY());
 
-                    for (MusicNode n : mNodes) {
+                        for (Measure m : measures) {
 
-                        // Check if image coordinates are inside a note
-                        JMusicNode image = n.getImage();
-                        if (image.containsPoint(mousePosition)) {
+                            MusicSequence mNodes = m.getNodes();
 
-                            // Replace selected note with a rest of equal size
-                            int index = mNodes.indexOf(n);
-                            mNodes.remove(n);
-                            mNodes.add(index, new MusicNode(Note.REST, n.getLength()));
+                            for (MusicNode n : mNodes) {
 
-                            // Send new node information to the application
-                            app.setSelectLength(n.getLength());
-                            app.setSelectTypeStatus((n.getNote() == Note.REST) ? 1 : 0);
+                                // Check if image coordinates are inside a note
+                                JMusicNode image = n.getImage();
+                                if (image.containsPoint(mousePosition)) {
 
-                            // Select new node
-                            image.setLocation(mousePosition);
-                            previewNode = image;
-                            snapToLine(previewNode);
+                                    // Replace selected note with a rest of equal size
+                                    int index = mNodes.indexOf(n);
+                                    mNodes.remove(n);
+                                    mNodes.add(index, new MusicNode(Note.REST, n.getLength()));
 
-                            updateComponent();
-                            return;
+                                    // Send new node information to the application
+                                    app.setSelectLength(n.getLength());
+                                    app.setSelectTypeStatus((n.getNote() == Note.REST) ? 1 : 0);
 
-                        } // if
+                                    // Select new node
+                                    image.setLocation(mousePosition);
+                                    previewNode = image;
+                                    snapToLine(previewNode);
 
-                    } // for
+                                    updateComponent();
+                                    return;
 
-                } // for
+                                } // if
 
-                // Cases based on node type
-                switch (app.getSelectType()) {
+                            } // for
 
-                    // Note
-                    case 0: {
+                        } // for
 
-                        // Create new note based on application status
-                        double length = app.getSelectLength();
-                        JMusicNode selected = JMusicNodeFactory.createNote(length);
-                        selected.setLocation(mousePosition);
-                        previewNode = selected;
-                        snapToLine(previewNode);
+                        // Cases based on node type
+                        switch (app.getSelectType()) {
+
+                            // Note
+                            case 0: {
+
+                                // Create new note based on application status
+                                double length = app.getSelectLength();
+                                JMusicNode selected = JMusicNodeFactory.createNote(length);
+                                selected.setLocation(mousePosition);
+                                previewNode = selected;
+                                snapToLine(previewNode);
+
+                                break;
+
+                            } // 0
+
+                            // Rest
+                            case 1: {
+
+                                // Create new rest based on application status
+                                double length = app.getSelectLength();
+                                JMusicNode selected = JMusicNodeFactory.createRest(length);
+                                selected.setLocation(mousePosition);
+                                previewNode = selected;
+                                snapToLine(previewNode);
+
+                                break;
+
+                            } // 1
+
+                            // Flat
+                            case 2: {
+
+                                // Create new accidental
+                                JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.FLAT);
+                                selected.setLocation(mousePosition);
+                                previewNode = selected;
+                                snapToLine(previewNode);
+
+                                break;
+
+                            } // 2
+
+                            // Sharp
+                            case 3: {
+
+                                // Create new accidental
+                                JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.SHARP);
+                                selected.setLocation(mousePosition);
+                                previewNode = selected;
+                                snapToLine(previewNode);
+
+                                break;
+
+                            } // Sharp
+
+                            default: break;
+
+                        } // switch
+
+                        updateComponent();
 
                         break;
 
-                    } // 0
-
-                    // Rest
-                    case 1: {
-
-                        // Create new rest based on application status
-                        double length = app.getSelectLength();
-                        JMusicNode selected = JMusicNodeFactory.createRest(length);
-                        selected.setLocation(mousePosition);
-                        previewNode = selected;
-                        snapToLine(previewNode);
-
+                    case DRAW:
                         break;
-
-                    } // 1
-
-                    // Flat
-                    case 2: {
-
-                        // Create new accidental
-                        JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.FLAT);
-                        selected.setLocation(mousePosition);
-                        previewNode = selected;
-                        snapToLine(previewNode);
-
-                        break;
-
-                    } // 2
-
-                    // Sharp
-                    case 3: {
-
-                        // Create new accidental
-                        JMusicNode selected = JMusicNodeFactory.createAccidental(Accidental.SHARP);
-                        selected.setLocation(mousePosition);
-                        previewNode = selected;
-                        snapToLine(previewNode);
-
-                        break;
-
-                    } // Sharp
 
                     default: break;
 
                 } // switch
 
-                updateComponent();
+
 
             } // mousePressed
 
             public void mouseReleased(MouseEvent e) {
 
-                // Deselect and send note to the measure list
-                if (placing) {
-                    process(previewNode);
-                    previewNode = null;
-                    updateComponent();
-                    placing = false;
+                switch (mode) {
 
-                } // if
+                    case SELECT:
+
+                        // Deselect and send note to the measure list
+                        if (placing) {
+                            process(previewNode);
+                            previewNode = null;
+                            updateComponent();
+                            placing = false;
+
+                        } // if
+
+                        break;
+
+                    case DRAW:
+                        break;
+
+                    default: break;
+
+                } // switch
 
             } // mouseReleased
 
@@ -214,31 +250,44 @@ public class MusicView extends JComponent {
 
             public void mouseDragged(MouseEvent e) {
 
-                // Drag node with mouse and snap in valid positions
-                if (placing) {
-                    Point mousePosition = new Point(e.getX(), e.getY());
-                    previewNode.setLocation(mousePosition);
+                switch (mode) {
 
-                    snapToLine(previewNode);
-                    snapToNode(previewNode);
+                    case SELECT:
 
-                    // Snap accidental to note position
-                    if (previewNode instanceof JNote) {
-                        JNote note = (JNote) previewNode;
-                        JAccidental acc = note.getAccidental();
+                        // Drag node with mouse and snap in valid positions
+                        if (placing) {
+                            Point mousePosition = new Point(e.getX(), e.getY());
+                            previewNode.setLocation(mousePosition);
 
-                        if (acc != null) {
-                            acc.setLocation(previewNode.getLocation());
-                            snapToLine(acc);
-                            snapToNode(acc);
+                            snapToLine(previewNode);
+                            snapToNode(previewNode);
+
+                            // Snap accidental to note position
+                            if (previewNode instanceof JNote) {
+                                JNote note = (JNote) previewNode;
+                                JAccidental acc = note.getAccidental();
+
+                                if (acc != null) {
+                                    acc.setLocation(previewNode.getLocation());
+                                    snapToLine(acc);
+                                    snapToNode(acc);
+
+                                } // if
+
+                            } // if
+
+                            updateComponent();
 
                         } // if
 
-                    } // if
+                        break;
 
-                    updateComponent();
+                    case DRAW:
+                        break;
 
-                } // if
+                    default: break;
+
+                } // switch
 
             } // mouseDragged
 

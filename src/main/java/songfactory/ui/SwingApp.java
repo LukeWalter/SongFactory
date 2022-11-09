@@ -1,5 +1,6 @@
 package songfactory.ui;
 
+import songfactory.Mode;
 import songfactory.music.*;
 import songfactory.ui.notation.JMusicNode;
 
@@ -15,6 +16,8 @@ import javax.swing.border.EmptyBorder;
  * Java Swing application.
  */
 public class SwingApp {
+
+    private Mode mode;
 
     private JLabel status; // Editable status text
 
@@ -34,6 +37,8 @@ public class SwingApp {
      * Constructs the swing app and displays it on screen.
      */
     public SwingApp() {
+
+        mode = Mode.SELECT;
 
         selectType = 0;
 
@@ -196,10 +201,19 @@ public class SwingApp {
 
         // Event listeners
         exit.addActionListener(e -> System.exit(0));
-        select.addActionListener(e -> setStatusText("Select"));
-        pen.addActionListener(e -> setStatusText("Pen"));
         play.addActionListener(e -> setStatusText("Play"));
         stop.addActionListener(e -> setStatusText("Stop"));
+
+        select.addActionListener(e -> {
+            mode = Mode.SELECT;
+            setStatusText("Select");
+
+        });
+
+        pen.addActionListener(e -> {
+            mode = Mode.DRAW;
+            setStatusText("Pen");
+        });
 
         create.addActionListener(e -> {
             setStatusText("New Staff");
@@ -447,5 +461,10 @@ public class SwingApp {
         } // if
 
     } // setDeletableMeasure
+
+    public Mode getMode() {
+        return mode;
+
+    } // getMode
 
 } // SwingApp
