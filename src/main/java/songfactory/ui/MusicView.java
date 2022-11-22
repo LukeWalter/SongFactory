@@ -4,12 +4,14 @@ import songfactory.Mode;
 import songfactory.Pair;
 import songfactory.music.*;
 import songfactory.recognition.*;
+import songfactory.ui.TimerBall;
 import songfactory.ui.notation.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +31,8 @@ public class MusicView extends JComponent {
 
     private ArrayList<Point2D> stroke; // Pen stroke
     private int alpha; // Opacity of pen stroke
+
+    private TimerBall animation;
 
     /**
      * Represents the sizing and positional
@@ -92,6 +96,7 @@ public class MusicView extends JComponent {
 
         placing = false;
 
+        this.animation = new TimerBall(staff.x + 150, staff.y - 8);
 
         this.addMouseListener(new MouseAdapter() {
 
@@ -636,6 +641,9 @@ public class MusicView extends JComponent {
             } // if
 
         } // if
+
+        animation.sns(1f);
+        animation.draw(g2d);
 
         // Draw pen shape
         if (stroke != null) {
