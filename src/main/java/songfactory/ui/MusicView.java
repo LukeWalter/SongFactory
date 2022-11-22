@@ -33,6 +33,7 @@ public class MusicView extends JComponent {
     private int alpha; // Opacity of pen stroke
 
     private TimerBall animation;
+    private boolean playing;
 
     /**
      * Represents the sizing and positional
@@ -96,7 +97,8 @@ public class MusicView extends JComponent {
 
         placing = false;
 
-        this.animation = new TimerBall(staff.x + 150, staff.y - 8);
+        this.animation = new TimerBall(this, staff.x + 150, staff.y - 8);
+        animation.start(100f, 2000);
 
         this.addMouseListener(new MouseAdapter() {
 
@@ -490,7 +492,7 @@ public class MusicView extends JComponent {
         g2d.drawLine(x + width - 4, y + 5, x + width - 4, y + height - 5);
         g2d.setStroke(new BasicStroke(2f));
 
-        // Draw trable clef and time signature
+        // Draw treble clef and time signature
         JMusicNode t = new TrebleClef();
         t.setLocation(x + 5, y + height);
         t.paintNode(g);

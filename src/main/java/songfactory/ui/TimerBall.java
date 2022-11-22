@@ -1,6 +1,9 @@
 package songfactory.ui;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 
 public class TimerBall extends Ellipse2D.Float {
@@ -8,11 +11,18 @@ public class TimerBall extends Ellipse2D.Float {
     private float dx, dy;
     private Color color;
 
-    public TimerBall(float x, float y) {
+    private Timer aniTimer;
+    private int curr;
+    private MusicView mv;
+
+    public TimerBall(MusicView mv, float x, float y) {
+
         super(x, y, 16, 16);
         dx = 0;
         dy = 0;
         color = Color.RED;
+
+        this.mv = mv;
 
     } // Constructor
 
@@ -46,6 +56,33 @@ public class TimerBall extends Ellipse2D.Float {
         this.x += this.width / 2;
         this.y += this.height - 8;
 
-    } // drawBall
+    } // draw
+
+    public void start(float distance, int ms) {
+
+        int delay = 30;
+
+        final float numIterations = (float) ms / delay;
+        this.curr = 0;
+
+        aniTimer = new Timer(delay, e -> {
+
+            if (this.curr++ >= (int) numIterations) {
+                aniTimer.stop();
+
+            } else {
+
+                System.out.println(this.curr + ": " + this.x);
+                this.x += distance / numIterations;
+
+                SwingUtilities.invokeLater(() -> this.mv.updateComponent());
+
+            } // if
+
+        });
+
+        aniTimer.start();
+
+    } // start
 
 } // TimerBall
