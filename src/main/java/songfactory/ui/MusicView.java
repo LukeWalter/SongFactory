@@ -4,14 +4,12 @@ import songfactory.Mode;
 import songfactory.Pair;
 import songfactory.music.*;
 import songfactory.recognition.*;
-import songfactory.ui.TimerBall;
 import songfactory.ui.notation.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,9 +94,6 @@ public class MusicView extends JComponent {
         updateStaff();
 
         placing = false;
-
-        this.animation = new TimerBall(this, staff.x + 150, staff.y - 8);
-        animation.start(100f, 2000);
 
         this.addMouseListener(new MouseAdapter() {
 
@@ -338,6 +333,8 @@ public class MusicView extends JComponent {
             } // mouseDragged
 
         });
+
+        this.playing = false;
 
     } // Constructor
 
@@ -644,8 +641,11 @@ public class MusicView extends JComponent {
 
         } // if
 
-        animation.sns(1f);
-        animation.draw(g2d);
+        if (playing) {
+            animation.sns(1f);
+            animation.draw(g2d);
+
+        } // if
 
         // Draw pen shape
         if (stroke != null) {
@@ -908,6 +908,11 @@ public class MusicView extends JComponent {
 
     } // process
 
+    public List<Measure> getMeasures() {
+        return measures;
+
+    } // getMeasures
+
     /**
      * Returns the number of measures in the measure list.
      *
@@ -959,5 +964,26 @@ public class MusicView extends JComponent {
         return recognized;
 
     } // recognizeShape
+
+    public boolean isPlaying() {
+        return playing;
+
+    } // isPlaying
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+
+    } // setPlaying
+
+    public void playAnimation() {
+
+        if (!this.isPlaying()) {
+            this.setPlaying(true);
+            this.animation = new TimerBall(this, staff.x + 150, staff.y - 8);
+            animation.sequence();
+
+        } // if
+
+    } // playAnimation
 
 } // MusicView

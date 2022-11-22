@@ -203,8 +203,28 @@ public class SwingApp {
 
         // Event listeners
         exit.addActionListener(e -> System.exit(0));
-        play.addActionListener(e -> setStatusText("Play"));
-        stop.addActionListener(e -> setStatusText("Stop"));
+
+        play.addActionListener(e -> {
+
+            setStatusText("Play");
+
+            for (MusicView mv : sheetMusic) {
+                mv.playAnimation();
+
+            } // for
+
+        });
+
+        stop.addActionListener(e -> {
+
+            setStatusText("Stop");
+
+            for (MusicView mv : sheetMusic) {
+                mv.setPlaying(false);
+
+            } // for
+
+        });
 
         select.addActionListener(e -> {
             mode = Mode.SELECT;
