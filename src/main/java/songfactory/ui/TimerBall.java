@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TimerBall extends Ellipse2D.Float {
 
-    private float dx, dy;
+    private float dy;
     private Color color;
 
     private Timer aniTimer;
@@ -24,25 +24,12 @@ public class TimerBall extends Ellipse2D.Float {
     public TimerBall(MusicView mv, float x, float y) {
 
         super(x, y, 16, 16);
-        dx = 0;
         dy = 0;
         color = Color.RED;
 
         this.mv = mv;
 
     } // Constructor
-
-    public void updateLocation() {
-        this.x += dx;
-        this.y += dy;
-
-    } // update
-
-    public void updateVelocity(float d2x, float d2y) {
-        this.dx += d2x;
-        this.dy += d2y;
-
-    } // updateVelocity
 
     public void sns(float factor) {
         this.width = 16 / factor;
@@ -111,12 +98,15 @@ public class TimerBall extends Ellipse2D.Float {
             MusicSequence currMeasure = measures.get(measures.size() - 1).getNodes();
 
             for (int n = 0; n < currMeasure.size() - 1; n++) {
-                float noteLength = (float) currMeasure.get(currMeasure.size() - 1).getLength();
+                float noteLength = (float) currMeasure.get(n).getLength();
                 this.start(50, (int)(1600 * noteLength));
                 while (aniTimer.isRunning());
 
             } // for
 
+            float noteLength = (float) currMeasure.get(currMeasure.size() - 1).getLength();
+            this.start(0, (int)(1600 * noteLength));
+            while (aniTimer.isRunning());
             mv.setPlaying(false);
 
         });
