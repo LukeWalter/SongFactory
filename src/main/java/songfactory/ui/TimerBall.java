@@ -60,24 +60,18 @@ public class TimerBall extends Ellipse2D.Float {
 
     public void start(float distance, int ms) {
 
-        int delay = 30;
+        int delay = 25;
 
         final float numIterations = (float) ms / delay;
+        final float step = distance / numIterations;
         this.curr = 0;
 
         aniTimer = new Timer(delay, e -> {
 
-            if (this.curr++ >= (int) numIterations) {
-                aniTimer.stop();
+            if (this.curr++ >= (int) numIterations) aniTimer.stop();
+            else this.x += step;
 
-            } else {
-
-                System.out.println(this.curr + ": " + this.x);
-                this.x += distance / numIterations;
-
-                SwingUtilities.invokeLater(() -> this.mv.updateComponent());
-
-            } // if
+            SwingUtilities.invokeLater(() -> this.mv.updateComponent());
 
         });
 
