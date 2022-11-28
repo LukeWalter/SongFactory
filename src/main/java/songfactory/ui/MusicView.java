@@ -30,7 +30,7 @@ public class MusicView extends JComponent {
     private ArrayList<Point2D> stroke; // Pen stroke
     private int alpha; // Opacity of pen stroke
 
-    private TimerBall animation;
+    private TimerBall animation; // Ball for timed animation
     private boolean playing;
 
     /**
@@ -641,6 +641,7 @@ public class MusicView extends JComponent {
 
         } // if
 
+        // Draw animated ball
         if (playing) {
             animation.sns(1f);
             animation.draw(g2d);
@@ -975,6 +976,9 @@ public class MusicView extends JComponent {
 
     } // setPlaying
 
+    /**
+     * Plays the ball animation.
+     */
     public void playAnimation() {
 
         if (!this.isPlaying()) {
@@ -986,6 +990,9 @@ public class MusicView extends JComponent {
 
     } // playAnimation
 
+    /**
+     * Stops the ball animation.
+     */
     public void stopAnimation() {
 
         if (this.isPlaying()) {
