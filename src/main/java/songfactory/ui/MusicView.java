@@ -30,6 +30,9 @@ public class MusicView extends JComponent {
     private ArrayList<Point2D> stroke; // Pen stroke
     private int alpha; // Opacity of pen stroke
 
+    private TimerBall animation; // Ball for timed animation
+    private boolean playing;
+
     /**
      * Represents the sizing and positional
      * values of the staff.
@@ -91,7 +94,6 @@ public class MusicView extends JComponent {
         updateStaff();
 
         placing = false;
-
 
         this.addMouseListener(new MouseAdapter() {
 
@@ -332,6 +334,8 @@ public class MusicView extends JComponent {
 
         });
 
+        this.playing = false;
+
     } // Constructor
 
     /**
@@ -485,7 +489,7 @@ public class MusicView extends JComponent {
         g2d.drawLine(x + width - 4, y + 5, x + width - 4, y + height - 5);
         g2d.setStroke(new BasicStroke(2f));
 
-        // Draw trable clef and time signature
+        // Draw treble clef and time signature
         JMusicNode t = new TrebleClef();
         t.setLocation(x + 5, y + height);
         t.paintNode(g);
@@ -634,6 +638,13 @@ public class MusicView extends JComponent {
                 g2d.drawLine(ix - 8, staff.lline4, ix + 8, staff.lline4);
 
             } // if
+
+        } // if
+
+        // Draw animated ball
+        if (playing) {
+            animation.sns(1f);
+            animation.draw(g2d);
 
         } // if
 
@@ -898,6 +909,11 @@ public class MusicView extends JComponent {
 
     } // process
 
+    public List<Measure> getMeasures() {
+        return measures;
+
+    } // getMeasures
+
     /**
      * Returns the number of measures in the measure list.
      *
@@ -949,5 +965,43 @@ public class MusicView extends JComponent {
         return recognized;
 
     } // recognizeShape
+
+    public boolean isPlaying() {
+        return playing;
+
+    } // isPlaying
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+
+    } // setPlaying
+
+    /**
+     * Plays the ball animation.
+     */
+    public void playAnimation() {
+
+        if (!this.isPlaying()) {
+            this.setPlaying(true);
+            this.animation = new TimerBall(this, staff.x + 150, staff.y - 8);
+            animation.sequence();
+
+        } // if
+
+    } // playAnimation
+
+    /**
+     * Stops the ball animation.
+     */
+    public void stopAnimation() {
+
+        if (this.isPlaying()) {
+            this.setPlaying(false);
+            this.animation.stop();
+            this.animation = null;
+
+        } // if
+
+    } // stopAnimation
 
 } // MusicView
