@@ -986,4 +986,15 @@ public class MusicView extends JComponent {
 
     } // playAnimation
 
+    public void stopAnimation() {
+
+        if (this.isPlaying()) {
+            this.setPlaying(false);
+            this.animation.stop();
+            this.animation = null;
+
+        } // if
+
+    } // stopAnimation
+
 } // MusicView

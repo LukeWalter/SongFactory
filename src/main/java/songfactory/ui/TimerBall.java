@@ -20,13 +20,14 @@ public class TimerBall extends Ellipse2D.Float {
     private Timer aniTimer;
     private int curr;
     private MusicView mv;
+    private float snsFactor;
 
     public TimerBall(MusicView mv, float x, float y) {
 
         super(x, y, 16, 16);
         dy = 0;
         color = Color.RED;
-
+        snsFactor = 1;
         this.mv = mv;
 
     } // Constructor
@@ -38,6 +39,8 @@ public class TimerBall extends Ellipse2D.Float {
     } // sns
 
     public void draw(Graphics2D g2d) {
+
+        this.sns(snsFactor);
 
         this.x -= this.width / 2;
         this.y -= this.height - 8;
@@ -53,24 +56,44 @@ public class TimerBall extends Ellipse2D.Float {
 
     public void start(float distance, int ms) {
 
-        int delay = 25;
+        int delay = 10;
         float pauseRatio = 0.1f;
 
-        final float numIterations = (float) ms / delay;
-        final float anticipation = numIterations * pauseRatio;
-        final float step = (distance / (1 - pauseRatio)) / numIterations;
+        final int numIterations = ms / delay;
+        System.out.println(numIterations);
+        final int anticipation = (int)(numIterations * pauseRatio);
 
+        float vo = -1.5f / ((float) ms / 1600);
+        float v = -1 * vo;
+        float t = numIterations - anticipation;
+        float a = (v - vo) / t;
+
+        final float gravity = a;
+        final float step = distance / (numIterations - anticipation);
+        System.out.println(ms + ":" + anticipation);
         this.curr = 0;
 
         aniTimer = new Timer(delay, e -> {
 
-            if (this.curr >= (int) numIterations) {
+            if (this.curr >= numIterations) {
                 aniTimer.stop();
-                this.x = (float) Math.floor(this.x);
-                System.out.println(this.x);
 
-            } else if (this.curr >= (int) anticipation) {
+            } else if (this.curr >= anticipation) {
                 this.x += step;
+                this.y += dy;
+                this.dy += gravity;
+
+            } else if (this.curr == (anticipation - 1)) {
+                this.snsFactor = 1;
+                this.dy = vo;
+
+            } else if (this.curr > (anticipation / 2)) {
+                this.snsFactor += 0.3 / (anticipation / 2);
+                this.dy = 0;
+
+            } else {
+                this.snsFactor -= 0.3 / (anticipation / 2);
+                this.dy = 0;
 
             } // if
 
@@ -83,6 +106,12 @@ public class TimerBall extends Ellipse2D.Float {
 
     } // start
 
+    public void stop() {
+        aniTimer.stop();
+        mv.setPlaying(false);
+
+    } // stop
+
     public void sequence() {
 
         List<Measure> measures = mv.getMeasures();
@@ -94,24 +123,48 @@ public class TimerBall extends Ellipse2D.Float {
                 MusicSequence currMeasure = measures.get(m).getNodes();
 
                 for (int n = 0; n < currMeasure.size() - 1; n++) {
+
+                    if (!mv.isPlaying()) return;
+
+                    float oldX = this.x;
+                    float oldY = this.y;
+
                     float noteLength = (float) currMeasure.get(n).getLength();
                     this.start(50, (int)(1600 * noteLength));
                     while (aniTimer.isRunning());
 
+                    this.x = oldX + 50f;
+                    this.y = oldY;
+
                 } // for
+
+                float oldX = this.x;
+                float oldY = this.y;
 
                 float noteLength = (float) currMeasure.get(currMeasure.size() - 1).getLength();
                 this.start(100, (int)(1600 * noteLength));
                 while (aniTimer.isRunning());
+
+                this.x = oldX + 100f;
+                this.y = oldY;
 
             } // for
 
             MusicSequence currMeasure = measures.get(measures.size() - 1).getNodes();
 
             for (int n = 0; n < currMeasure.size() - 1; n++) {
+
+                if (!mv.isPlaying()) return;
+
+                float oldX = this.x;
+                float oldY = this.y;
+
                 float noteLength = (float) currMeasure.get(n).getLength();
                 this.start(50, (int)(1600 * noteLength));
                 while (aniTimer.isRunning());
+
+                this.x = oldX + 50f;
+                this.y = oldY;
 
             } // for
 

@@ -220,7 +220,7 @@ public class SwingApp {
             setStatusText("Stop");
 
             for (MusicView mv : sheetMusic) {
-                mv.setPlaying(false);
+                mv.stopAnimation();
 
             } // for
 
